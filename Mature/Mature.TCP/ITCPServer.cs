@@ -7,7 +7,8 @@ namespace Mature.TCP
 {
     public interface ITCPServer
     {
-        ConcurrentDictionary<string, ITCPClient> Connections { get; set; }
-        bool Listening(ushort port);
+        IEnumerable<SessionInfo> GetAllSession();
+        SessionInfo GetSessionByID(string sessionID);
+        void Run(ushort port);
     }
 }
