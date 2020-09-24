@@ -21,13 +21,32 @@ namespace Mature.TCP.Server
             throw new NotImplementedException();
         }
 
-        public void Run(ushort port)
+        IBootstrap bootstrap;
+
+        public event EventHandler<SessionInfo> NewSessionConnected;
+        public event EventHandler<SessionInfo> SessionClosed;
+
+        private void OnNewSessionConnected(SessionInfo sessionInfo)
         {
-            IBootstrap bootstrap = BootstrapFactory.CreateBootstrap();
+            if (NewSessionConnected != null)
+            {
+                NewSessionConnected(this, sessionInfo);
+            }
+        }
+        private void OnSessionClosed(SessionInfo sessionInfo)
+        {
+            if (SessionClosed != null)
+            {
+                SessionClosed(this, sessionInfo);
+            }
+        }
+        public bool Start()
+        {
+            bootstrap = BootstrapFactory.CreateBootstrap();
             if (!bootstrap.Initialize())
             {
                 Console.WriteLine("Failed to initialize SuperSocket ServiceEngine! Please check error log for more information!");
-                return;
+                return false;
             }
             Console.WriteLine("Starting...");
 
@@ -47,14 +66,13 @@ namespace Mature.TCP.Server
                 }
             }
 
-            Console.ResetColor();
             Console.WriteLine("-------------------------------------------------------------------");
 
             switch (result)
             {
                 case (StartResult.None):
                     Console.WriteLine("No server is configured, please check you configuration!");
-                    return;
+                    return false;
 
                 case (StartResult.Success):
                     Console.WriteLine("The SuperSocket ServiceEngine has been started!");
@@ -62,13 +80,21 @@ namespace Mature.TCP.Server
 
                 case (StartResult.Failed):
                     Console.WriteLine("Failed to start the SuperSocket ServiceEngine! Please check error log for more information!");
-                    return;
+                    return false;
 
                 case (StartResult.PartialSuccess):
                     Console.WriteLine("Some server instances were started successfully, but the others failed! Please check error log for more information!");
                     break;
             }
-            Console.WriteLine("Enter key 'quit' to stop the ServiceEngine.");
+            return true;
+        }
+
+        public void Stop()
+        {
+            if (bootstrap != null)
+            {
+                bootstrap.Stop();
+            }
         }
     }
 }

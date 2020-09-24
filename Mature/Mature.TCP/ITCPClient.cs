@@ -8,8 +8,8 @@ namespace Mature.TCP
     public interface ITCPClient
     {
         bool IsConnected { get; }
-        bool Connect(string ip, ushort port);
-        Task<TResponse> Send<TRequest, TResponse>(TRequest request);
+        Task<bool> ConnectAsync(string ip, ushort port);
+        Task<TResponse> SendAsync<TRequest, TResponse>(TRequest request);
         event EventHandler Connected;
         event EventHandler Closed;
     }

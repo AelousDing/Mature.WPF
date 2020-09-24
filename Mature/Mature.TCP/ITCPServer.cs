@@ -9,6 +9,9 @@ namespace Mature.TCP
     {
         IEnumerable<SessionInfo> GetAllSession();
         SessionInfo GetSessionByID(string sessionID);
-        void Run(ushort port);
+        bool Start();
+        void Stop();
+        event EventHandler<SessionInfo> NewSessionConnected;
+        event EventHandler<SessionInfo> SessionClosed;
     }
 }
