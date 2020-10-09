@@ -8,7 +8,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Mature.TCP.Server
+namespace Mature.Socket.Server.SuperSocket
 {
     public class TCPServer : ITCPServer
     {
