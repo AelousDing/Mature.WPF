@@ -25,7 +25,7 @@ namespace Mature.Socket.Client.SuperSocket
         }
 
         EasyClient<StringPackageInfo> easyClient;
-        public bool IsConnected => throw new NotImplementedException();
+        public bool IsConnected => easyClient.IsConnected;
 
         public event EventHandler Connected;
         public event EventHandler Closed;

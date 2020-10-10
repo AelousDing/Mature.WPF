@@ -23,12 +23,20 @@ namespace Mature.Socket.Server.SuperSocket
         }
         protected override int GetBodyLengthFromHeader(byte[] header, int offset, int length)
         {
-            throw new NotImplementedException();
+            var strLen = Encoding.UTF8.GetString(header, offset + 3, 4);
+            return int.Parse(strLen.TrimStart('0'));
         }
 
         protected override StringRequestInfo ResolveRequestInfo(ArraySegment<byte> header, byte[] bodyBuffer, int offset, int length)
         {
-            throw new NotImplementedException();
+            //bool isCompress = bool.Parse(Encoding.UTF8.GetString(header.Array, 2, 1));
+            //if (isCompress)
+            //{
+            //    //解压缩处理
+            //}
+            var body = Encoding.UTF8.GetString(bodyBuffer, offset, length);
+            Console.WriteLine(body);
+            return new StringRequestInfo(Encoding.UTF8.GetString(header.Array, header.Offset, 2), body, new string[] { body });
         }
     }
 }

@@ -22,12 +22,13 @@ namespace Mature.Socket.Client.SuperSocket
         }
         public override StringPackageInfo ResolvePackage(IBufferStream bufferStream)
         {
-            throw new NotImplementedException();
+            return new StringPackageInfo(string.Empty, bufferStream.Skip(9).ReadString(Size - 9, Encoding.UTF8), null);
         }
 
         protected override int GetBodyLengthFromHeader(IBufferStream bufferStream, int length)
         {
-            throw new NotImplementedException();
+            var bodyLen = bufferStream.Skip(3).ReadInt32();
+            return bodyLen;
         }
     }
 }
