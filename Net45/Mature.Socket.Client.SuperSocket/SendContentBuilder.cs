@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Mature.Socket.Client.SuperSocket
 {
-    public class SendBuilder
+    public class SendContentBuilder
     {
         public byte[] Builder(string key, string body, bool isCompress)
         {
@@ -14,6 +14,10 @@ namespace Mature.Socket.Client.SuperSocket
             if (isCompress)
             {
                 //GZipStream
+            }
+            else
+            {
+
             }
 
             return null;
