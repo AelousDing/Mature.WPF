@@ -1,4 +1,5 @@
 ﻿using Mature.Socket;
+using Mature.Socket.Common.SuperSocket;
 using SuperSocket.ClientEngine;
 using SuperSocket.ProtoBase;
 using System;
@@ -12,8 +13,10 @@ namespace Mature.Socket.Client.SuperSocket
 {
     public class TCPClient : ITCPClient
     {
-        public TCPClient()
+        IContentBuilder contentBuilder;
+        public TCPClient(IContentBuilder contentBuilder)
         {
+            this.contentBuilder = contentBuilder;
             easyClient = new EasyClient<StringPackageInfo>();
             easyClient.Initialize(new MyFixedHeaderReceiveFilter());
             easyClient.NewPackageReceived += EasyClient_NewPackageReceived;
@@ -38,7 +41,7 @@ namespace Mature.Socket.Client.SuperSocket
 
         public Task<TResponse> SendAsync<TRequest, TResponse>(TRequest request)
         {
-            easyClient.Send(new byte[] { });
+            easyClient.Send(contentBuilder.Builder("", ""));
             throw new NotImplementedException();
         }
     }

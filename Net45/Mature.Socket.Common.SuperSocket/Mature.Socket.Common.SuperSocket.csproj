@@ -41,6 +41,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="ContentBuilder.cs" />
     <Compile Include="CRCUtil.cs" />
     <Compile Include="GZipUtil.cs" />
     <Compile Include="IContentBuilder.cs" />
