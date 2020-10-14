@@ -4,9 +4,10 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Mature.Socket.Common.SuperSocket
+namespace Mature.Socket.Common.SuperSocket.Validation
 {
-    public class CRCUtil
+    public interface IDataValidation<T>
     {
+        T Validation(byte[] source);
     }
 }

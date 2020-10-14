@@ -41,11 +41,12 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Compression\GZip.cs" />
+    <Compile Include="Compression\ICompression.cs" />
     <Compile Include="ContentBuilder.cs" />
-    <Compile Include="CRCUtil.cs" />
-    <Compile Include="GZipUtil.cs" />
     <Compile Include="IContentBuilder.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Validation\IDataValidation.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
