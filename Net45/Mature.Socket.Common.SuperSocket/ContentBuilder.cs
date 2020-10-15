@@ -10,11 +10,21 @@ namespace Mature.Socket.Common.SuperSocket
 {
     //数据完整性校验
     //数据压缩
+    //报文格式：key 压缩标志位 校验位 正文
     public class ContentBuilder : IContentBuilder
     {
-        public ContentBuilder(ICompression compression, IDataValidation<string> dataValidation)
-        {
+        int keyLength = 2;
+        int compressFlagLength = 1;
+        int bodyLength = 4;
+        int validationLength;
 
+        ICompression compression;
+        IDataValidation dataValidation;
+        public ContentBuilder(ICompression compression, IDataValidation dataValidation)
+        {
+            this.compression = compression;
+            this.dataValidation = dataValidation;
+            validationLength = dataValidation.Length;
         }
         public byte[] Builder(string key, string body)
         {
@@ -27,6 +37,7 @@ namespace Mature.Socket.Common.SuperSocket
             if (isCompress)
             {
                 //GZipStream
+
             }
             else
             {

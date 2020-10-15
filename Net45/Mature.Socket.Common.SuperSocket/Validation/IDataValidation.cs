@@ -6,8 +6,9 @@ using System.Threading.Tasks;
 
 namespace Mature.Socket.Common.SuperSocket.Validation
 {
-    public interface IDataValidation<T>
+    public interface IDataValidation
     {
-        T Validation(byte[] source);
+        int Length { get; }
+        byte[] Validation(byte[] source);
     }
 }
