@@ -10,40 +10,38 @@ namespace Mature.Socket.Common.SuperSocket
 {
     //数据完整性校验
     //数据压缩
-    //报文格式：key 压缩标志位 校验位 正文
+    //报文格式：key（2位）压缩标志位（1位）报文长度（4位）校验位（16位）正文
     public class ContentBuilder : IContentBuilder
     {
-        int keyLength = 2;
-        int compressFlagLength = 1;
-        int bodyLength = 4;
-        int validationLength;
-
         ICompression compression;
         IDataValidation dataValidation;
+        public Encoding Encoding { get; set; } = Encoding.UTF8;
         public ContentBuilder(ICompression compression, IDataValidation dataValidation)
         {
             this.compression = compression;
             this.dataValidation = dataValidation;
-            validationLength = dataValidation.Length;
         }
-        public byte[] Builder(string key, string body)
+        public byte[] Builder(ushort key, string body)
         {
             return Builder(key, body, false);
         }
 
-        public byte[] Builder(string key, string body, bool isCompress)
+        public byte[] Builder(ushort key, string body, bool isCompress)
         {
-            byte[] bodyBuffer = Encoding.UTF8.GetBytes(body);
+            byte[] bodyBuffer = Encoding.GetBytes(body);
+            var validation = dataValidation.Validation(bodyBuffer);
             if (isCompress)
             {
                 //GZipStream
-
+                bodyBuffer = compression.Compress(bodyBuffer);
             }
-            else
-            {
-
-            }
-            return bodyBuffer;
+            List<byte> data = new List<byte>();
+            data.AddRange(BitConverter.GetBytes(key));
+            data.AddRange(BitConverter.GetBytes(isCompress));
+            data.AddRange(BitConverter.GetBytes(bodyBuffer.Length));
+            data.AddRange(validation);
+            data.AddRange(bodyBuffer);
+            return data.ToArray();
         }
     }
 }

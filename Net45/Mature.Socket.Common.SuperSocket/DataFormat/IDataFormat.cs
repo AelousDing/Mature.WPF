@@ -4,10 +4,10 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Mature.Socket.Common.SuperSocket.Validation
+namespace Mature.Socket.Common.SuperSocket.DataFormat
 {
-    public interface IDataValidation
+    public interface IDataFormat
     {
-        byte[] Validation(byte[] source);
+        string Format<T>(T source);
     }
 }

@@ -1,4 +1,5 @@
-﻿using SuperSocket.ProtoBase;
+﻿using Mature.Socket.Common.SuperSocket.Compression;
+using SuperSocket.ProtoBase;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -16,13 +17,26 @@ namespace Mature.Socket.Client.SuperSocket
      */
     public class MyFixedHeaderReceiveFilter : FixedHeaderReceiveFilter<StringPackageInfo>
     {
-        public MyFixedHeaderReceiveFilter() : base(9)
+        public MyFixedHeaderReceiveFilter() : base(23)
         {
 
         }
         public override StringPackageInfo ResolvePackage(IBufferStream bufferStream)
         {
-            return new StringPackageInfo(string.Empty, bufferStream.Skip(9).ReadString(Size - 9, Encoding.UTF8), null);
+            ushort key = bufferStream.ReadUInt16();
+            bool isCompression = bufferStream.ReadByte() == 0 ? false : true;
+            byte[] body = null;
+            if (isCompression)
+            {
+                ICompression compression = new GZip();
+                body = compression.Decompress(bufferStream.Skip(23).Take(Size - 23)[0].ToArray());
+            }
+            else
+            {
+                body = bufferStream.Skip(23).Take(Size - 23)[0].ToArray();
+            }
+            string bodyString = Encoding.UTF8.GetString(body);
+            return new StringPackageInfo(key.ToString(), bodyString, new string[] { bodyString });
         }
 
         protected override int GetBodyLengthFromHeader(IBufferStream bufferStream, int length)

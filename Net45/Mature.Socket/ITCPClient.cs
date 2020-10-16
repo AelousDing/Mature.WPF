@@ -9,7 +9,8 @@ namespace Mature.Socket
     {
         bool IsConnected { get; }
         Task<bool> ConnectAsync(string ip, ushort port);
-        Task<TResponse> SendAsync<TRequest, TResponse>(TRequest request);
+        Task<string> SendAsync(ushort key, string body);
+        Task<TResponse> SendAsync<TRequest, TResponse>(ushort key, TRequest request);
         event EventHandler Connected;
         event EventHandler Closed;
     }

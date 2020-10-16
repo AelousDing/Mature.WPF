@@ -1,4 +1,5 @@
-﻿using SuperSocket.Facility.Protocol;
+﻿using Mature.Socket.Common.SuperSocket.Compression;
+using SuperSocket.Facility.Protocol;
 using SuperSocket.SocketBase.Protocol;
 using System;
 using System.Collections.Generic;
@@ -23,20 +24,27 @@ namespace Mature.Socket.Server.SuperSocket
         }
         protected override int GetBodyLengthFromHeader(byte[] header, int offset, int length)
         {
-            var strLen = Encoding.UTF8.GetString(header, offset + 3, 4);
+            var strLen = Encoding.ASCII.GetString(header, offset + 3, 4);
             return int.Parse(strLen.TrimStart('0'));
         }
 
         protected override StringRequestInfo ResolveRequestInfo(ArraySegment<byte> header, byte[] bodyBuffer, int offset, int length)
         {
-            //bool isCompress = bool.Parse(Encoding.UTF8.GetString(header.Array, 2, 1));
-            //if (isCompress)
-            //{
-            //    //解压缩处理
-            //}
-            var body = Encoding.UTF8.GetString(bodyBuffer, offset, length);
+            bool isCompress = bool.Parse(Encoding.ASCII.GetString(header.Array, 2, 1));
+            byte[] data = null;
+            if (isCompress)
+            {
+                //解压缩处理
+                ICompression compression = new GZip();
+                data = compression.Decompress(bodyBuffer.Skip(offset).Take(length).ToArray());
+            }
+            else
+            {
+                data = bodyBuffer.Skip(offset).Take(length).ToArray();
+            }
+            var body = Encoding.UTF8.GetString(data);
             Console.WriteLine(body);
-            return new StringRequestInfo(Encoding.UTF8.GetString(header.Array, header.Offset, 2), body, new string[] { body });
+            return new StringRequestInfo(Encoding.ASCII.GetString(header.Array, header.Offset, 2), body, new string[] { body });
         }
     }
 }
