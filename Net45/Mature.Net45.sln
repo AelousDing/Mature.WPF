@@ -13,6 +13,10 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Mature.Socket.Common.SuperS
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Mature.SuperSocket.Test", "Mature.SuperSocket.Test\Mature.SuperSocket.Test.csproj", "{8CA69209-AF33-4268-A3A7-8DF486AD03B7}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "SuperSocket", "SuperSocket", "{735B7F47-3893-43C6-A378-0D42F07DB24C}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SuperSocketClientWPF", "SuperSocketClientWPF\SuperSocketClientWPF.csproj", "{1CED7CF8-AF78-4321-939F-F620F72D000D}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -39,9 +43,20 @@ Global
 		{8CA69209-AF33-4268-A3A7-8DF486AD03B7}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{8CA69209-AF33-4268-A3A7-8DF486AD03B7}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{8CA69209-AF33-4268-A3A7-8DF486AD03B7}.Release|Any CPU.Build.0 = Release|Any CPU
+		{1CED7CF8-AF78-4321-939F-F620F72D000D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{1CED7CF8-AF78-4321-939F-F620F72D000D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{1CED7CF8-AF78-4321-939F-F620F72D000D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{1CED7CF8-AF78-4321-939F-F620F72D000D}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{2D34D4CF-21F5-46CC-8E21-62EB3ECC2262} = {735B7F47-3893-43C6-A378-0D42F07DB24C}
+		{E02E5FF6-656F-4E27-99DF-A9EDD63A2A79} = {735B7F47-3893-43C6-A378-0D42F07DB24C}
+		{26A109EC-EEFF-4F40-9E1D-07375FA21C85} = {735B7F47-3893-43C6-A378-0D42F07DB24C}
+		{8CA69209-AF33-4268-A3A7-8DF486AD03B7} = {735B7F47-3893-43C6-A378-0D42F07DB24C}
+		{1CED7CF8-AF78-4321-939F-F620F72D000D} = {735B7F47-3893-43C6-A378-0D42F07DB24C}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {9AD48169-8681-4B78-9E8F-45F82F411227}
