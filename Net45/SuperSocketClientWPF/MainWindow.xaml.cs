@@ -43,7 +43,7 @@ namespace SuperSocketClientWPF
         {
             try
             {
-                var result = await client.SendAsync(TestCmd, tbSend.Text);
+                var result = await client.SendAsync(TestCmd, tbSend.Text, 30000);
                 tbReceive.Text += result;
             }
             catch (Exception ex)

@@ -87,7 +87,7 @@ namespace Mature.Socket.Client.SuperSocket
             return rrr;
         }
 
-        public async Task<string> SendAsync(ushort key, string body)
+        public async Task<string> SendAsync(ushort key, string body, int timeout)
         {
             TaskCompletionSource<StringPackageInfo> taskCompletionSource = new TaskCompletionSource<StringPackageInfo>();
             string messageId = Guid.NewGuid().ToString().Replace("-", "");
@@ -97,7 +97,7 @@ namespace Mature.Socket.Client.SuperSocket
             StringPackageInfo result = null;
             try
             {
-                cts.CancelAfter(Timeout);
+                cts.CancelAfter(timeout);
                 cts.Token.Register(() => taskCompletionSource.TrySetException(new TimeoutException("请求超时。")));
                 Console.WriteLine($"发送消息，消息ID：{messageId} 消息命令标识：{key} 消息内容：{body}");
                 easyClient.Send(contentBuilder.Builder(key, body, messageId));
@@ -119,9 +119,9 @@ namespace Mature.Socket.Client.SuperSocket
             }
             return result?.Body;
         }
-        public async Task<TResponse> SendAsync<TRequest, TResponse>(ushort key, TRequest request)
+        public async Task<TResponse> SendAsync<TRequest, TResponse>(ushort key, TRequest request, int timeout)
         {
-            string body = await SendAsync(key, dataFormat.Serialize<TRequest>(request));
+            string body = await SendAsync(key, dataFormat.Serialize<TRequest>(request), timeout);
             return dataFormat.Deserialize<TResponse>(body);
         }
     }
