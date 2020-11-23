@@ -7,6 +7,30 @@
         mc:Ignorable="d"
         Title="MainWindow" Height="450" Width="800">
     <Grid>
-        
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+        <StackPanel Orientation="Horizontal" VerticalAlignment="Top" Height="30">
+            <TextBlock Text="IP:"/>
+            <TextBox x:Name="tbIp" Width="100" Text="127.0.0.1"/>
+            <TextBlock Text="Port:"/>
+            <TextBox x:Name="tbPort" Width="100" Text="2020"/>
+            <Button x:Name="btnConnect" Content="连接" Click="btnConnect_Click"/>
+        </StackPanel>
+        <Grid Grid.Row="1">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="*"/>
+            </Grid.RowDefinitions>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="*"/>
+            </Grid.ColumnDefinitions>
+            <Button x:Name="btnSend" Content="发送" Width="100" Height="30" Click="btnSend_Click"/>
+            <TextBox Grid.Row="1" x:Name="tbSend" TextWrapping="Wrap"/>
+            <TextBlock Grid.Column="1" Text="返回消息"/>
+            <TextBox Grid.Row="1" Grid.Column="1" x:Name="tbReceive" TextWrapping="Wrap"/>
+        </Grid>
     </Grid>
 </Window>

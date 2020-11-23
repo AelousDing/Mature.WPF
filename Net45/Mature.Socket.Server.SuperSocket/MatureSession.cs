@@ -18,7 +18,7 @@ namespace Mature.Socket.Server.SuperSocket
         protected override void OnSessionClosed(CloseReason reason)
         {
             base.OnSessionClosed(reason);
-            Console.WriteLine("OnSessionClosed");
+            Console.WriteLine($"OnSessionClosed CloseReason:{reason}");
         }
         protected override void HandleUnknownRequest(StringRequestInfo requestInfo)
         {

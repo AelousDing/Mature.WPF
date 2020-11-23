@@ -13,24 +13,24 @@ namespace Mature.Socket.Server.SuperSocket
       2字节表示命令  C
       1字节表示报文是否压缩 Z
       4字节表示报文长度 L
-      2字节表示数据校验位 V
+      32字节表示消息ID V
+      16字节表示数据校验位 V
       报文头共计9字节
      */
     public class MyFixedHeaderReceiveFilter : FixedHeaderReceiveFilter<StringRequestInfo>
     {
-        public MyFixedHeaderReceiveFilter() : base(9)
+        public MyFixedHeaderReceiveFilter() : base(47)
         {
 
         }
         protected override int GetBodyLengthFromHeader(byte[] header, int offset, int length)
         {
-            var strLen = Encoding.ASCII.GetString(header, offset + 3, 4);
-            return int.Parse(strLen.TrimStart('0'));
+            return BitConverter.ToInt32(header.Skip(offset + 3).Take(4).ToArray(), 0);
         }
 
         protected override StringRequestInfo ResolveRequestInfo(ArraySegment<byte> header, byte[] bodyBuffer, int offset, int length)
         {
-            bool isCompress = bool.Parse(Encoding.ASCII.GetString(header.Array, 2, 1));
+            bool isCompress = header.Array[2] == 0 ? false : true;
             byte[] data = null;
             if (isCompress)
             {
@@ -43,8 +43,8 @@ namespace Mature.Socket.Server.SuperSocket
                 data = bodyBuffer.Skip(offset).Take(length).ToArray();
             }
             var body = Encoding.UTF8.GetString(data);
-            Console.WriteLine(body);
-            return new StringRequestInfo(Encoding.ASCII.GetString(header.Array, header.Offset, 2), body, new string[] { body });
+            var messageId = Encoding.ASCII.GetString(header.Array, 7, 32);
+            return new StringRequestInfo(BitConverter.ToUInt16(header.Array, header.Offset).ToString(), body, new string[] { messageId });
         }
     }
 }

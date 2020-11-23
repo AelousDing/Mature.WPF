@@ -5,7 +5,7 @@
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
     <ProjectGuid>{1CED7CF8-AF78-4321-939F-F620F72D000D}</ProjectGuid>
-    <OutputType>WinExe</OutputType>
+    <OutputType>Exe</OutputType>
     <RootNamespace>SuperSocketClientWPF</RootNamespace>
     <AssemblyName>SuperSocketClientWPF</AssemblyName>
     <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
@@ -32,6 +32,9 @@
     <DefineConstants>TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup>
+    <StartupObject />
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="System" />
@@ -92,6 +95,20 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Mature.Socket.Client.SuperSocket\Mature.Socket.Client.SuperSocket.csproj">
+      <Project>{2d34d4cf-21f5-46cc-8e21-62eb3ecc2262}</Project>
+      <Name>Mature.Socket.Client.SuperSocket</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Mature.Socket.Common.SuperSocket\Mature.Socket.Common.SuperSocket.csproj">
+      <Project>{26a109ec-eeff-4f40-9e1d-07375fa21c85}</Project>
+      <Name>Mature.Socket.Common.SuperSocket</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Mature.Socket\Mature.Socket.csproj">
+      <Project>{4f3266c3-78d4-418b-becb-4fdb3d3c1846}</Project>
+      <Name>Mature.Socket</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

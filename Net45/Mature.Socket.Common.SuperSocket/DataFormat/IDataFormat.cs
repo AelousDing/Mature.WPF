@@ -8,6 +8,7 @@ namespace Mature.Socket.Common.SuperSocket.DataFormat
 {
     public interface IDataFormat
     {
-        string Format<T>(T source);
+        string Serialize<T>(T source);
+        T Deserialize<T>(string source);
     }
 }

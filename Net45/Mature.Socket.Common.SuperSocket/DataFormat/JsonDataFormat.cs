@@ -9,7 +9,12 @@ namespace Mature.Socket.Common.SuperSocket.DataFormat
 {
     public class JsonDataFormat : IDataFormat
     {
-        public string Format<T>(T source)
+        public T Deserialize<T>(string source)
+        {
+            return JsonConvert.DeserializeObject<T>(source);
+        }
+
+        public string Serialize<T>(T source)
         {
             return JsonConvert.SerializeObject(source);
         }

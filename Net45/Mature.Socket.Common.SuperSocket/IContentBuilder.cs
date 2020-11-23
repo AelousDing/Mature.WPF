@@ -8,7 +8,7 @@ namespace Mature.Socket.Common.SuperSocket
 {
     public interface IContentBuilder
     {
-        byte[] Builder(ushort key, string body);
-        byte[] Builder(ushort key, string body, bool isCompress);
+        byte[] Builder(ushort key, string body, string messageId);
+        byte[] Builder(ushort key, string body, string messageId, bool isCompress);
     }
 }
