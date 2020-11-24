@@ -21,7 +21,6 @@ namespace Mature.Socket.Client.SuperSocket
         IContentBuilder contentBuilder;
         IDataFormat dataFormat;
         ConcurrentDictionary<string, TaskCompletionSource<StringPackageInfo>> task = new System.Collections.Concurrent.ConcurrentDictionary<string, TaskCompletionSource<StringPackageInfo>>();
-        public int Timeout { get; set; } = 30000;
         public TCPClient(IContentBuilder contentBuilder, IDataFormat dataFormat)
         {
             this.contentBuilder = contentBuilder;
@@ -70,21 +69,10 @@ namespace Mature.Socket.Client.SuperSocket
         public async Task<bool> ConnectAsync(string ip, ushort port)
         {
             EndPoint endPoint = new IPEndPoint(IPAddress.Parse(ip), port);
-            var rrr = await easyClient.ConnectAsync(endPoint);
-            byte[] m_KeepAliveOptionValues;
-            uint dummy = 0;
-            m_KeepAliveOptionValues = new byte[Marshal.SizeOf(dummy) * 3];
-            //whether enable KeepAlive
-            BitConverter.GetBytes((uint)1).CopyTo(m_KeepAliveOptionValues, 0);
-            //how long will start first keep alive
-            BitConverter.GetBytes((uint)(60 * 1000)).CopyTo(m_KeepAliveOptionValues, Marshal.SizeOf(dummy));
-            //keep alive interval
-            BitConverter.GetBytes((uint)(60 * 1000)).CopyTo(m_KeepAliveOptionValues, Marshal.SizeOf(dummy) * 2);
+            var isConnect = await easyClient.ConnectAsync(endPoint);
+            //启动断线重连
 
-
-
-            easyClient.Socket.SetSocketOption(SocketOptionLevel.Socket, SocketOptionName.KeepAlive, m_KeepAliveOptionValues);
-            return rrr;
+            return isConnect;
         }
 
         public async Task<string> SendAsync(ushort key, string body, int timeout)
@@ -123,6 +111,14 @@ namespace Mature.Socket.Client.SuperSocket
         {
             string body = await SendAsync(key, dataFormat.Serialize<TRequest>(request), timeout);
             return dataFormat.Deserialize<TResponse>(body);
+        }
+
+        public void Close()
+        {
+            if (Closed != null)
+            {
+                Closed(this, null);
+            }
         }
     }
 }
