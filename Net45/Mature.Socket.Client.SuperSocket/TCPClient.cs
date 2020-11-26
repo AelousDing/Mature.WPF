@@ -44,8 +44,6 @@ namespace Mature.Socket.Client.SuperSocket
         private void EasyClient_Connected(object sender, EventArgs e)
         {
             Console.WriteLine("EasyClient_Connected");
-            easyClient.Socket.SendTimeout = 30000;
-            easyClient.Socket.ReceiveTimeout = 30000;
             if (Connected != null)
             {
                 Connected(this, null);
@@ -72,8 +70,6 @@ namespace Mature.Socket.Client.SuperSocket
         {
             EndPoint endPoint = new IPEndPoint(IPAddress.Parse(ip), port);
             var isConnect = await easyClient.ConnectAsync(endPoint);
-            //启动断线重连
-
             return isConnect;
         }
 
@@ -82,30 +78,21 @@ namespace Mature.Socket.Client.SuperSocket
             TaskCompletionSource<StringPackageInfo> taskCompletionSource = new TaskCompletionSource<StringPackageInfo>();
             string messageId = Guid.NewGuid().ToString().Replace("-", "");
             task.TryAdd(messageId, taskCompletionSource);
-            //设置超时
-            var cts = new CancellationTokenSource();
             StringPackageInfo result = null;
             try
             {
-                //cts.CancelAfter(timeout);
-                //cts.Token.Register(() => taskCompletionSource.TrySetException(new TimeoutException("请求超时。")));
                 Console.WriteLine($"发送消息，消息ID：{messageId} 消息命令标识：{key} 消息内容：{body}");
                 easyClient.Send(contentBuilder.Builder(key, body, messageId));
                 result = await taskCompletionSource.Task;
             }
-            catch (TaskCanceledException)
-            {
-                throw new TimeoutException("请求超时。");
-            }
             catch (Exception ex)
             {
-                //cts.Cancel();
+                taskCompletionSource.TrySetException(ex);
                 throw ex;
             }
             finally
             {
                 task.TryRemove(messageId, out TaskCompletionSource<StringPackageInfo> tcs);
-                cts.Dispose();
             }
             return result?.Body;
         }

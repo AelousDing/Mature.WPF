@@ -21,7 +21,6 @@ namespace Mature.Socket.Server.SuperSocket
 
         private void MatureServer_NewRequestReceived(MatureSession session, StringRequestInfo requestInfo)
         {
-            System.Threading.Thread.Sleep(50000);
             IContentBuilder contentBuilder = new ContentBuilder(new GZip(), new MD5DataValidation());
             Console.WriteLine($"接收到消息，Key：{requestInfo.Key} Body:{requestInfo.Body} MessageId:{requestInfo.GetFirstParam()}");
             var data = contentBuilder.Builder(ushort.Parse(requestInfo.Key), requestInfo.Body, requestInfo.GetFirstParam());
