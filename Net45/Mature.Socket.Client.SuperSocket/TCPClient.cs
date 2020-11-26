@@ -87,8 +87,8 @@ namespace Mature.Socket.Client.SuperSocket
             StringPackageInfo result = null;
             try
             {
-                cts.CancelAfter(timeout);
-                cts.Token.Register(() => taskCompletionSource.TrySetException(new TimeoutException("请求超时。")));
+                //cts.CancelAfter(timeout);
+                //cts.Token.Register(() => taskCompletionSource.TrySetException(new TimeoutException("请求超时。")));
                 Console.WriteLine($"发送消息，消息ID：{messageId} 消息命令标识：{key} 消息内容：{body}");
                 easyClient.Send(contentBuilder.Builder(key, body, messageId));
                 result = await taskCompletionSource.Task;
@@ -99,7 +99,7 @@ namespace Mature.Socket.Client.SuperSocket
             }
             catch (Exception ex)
             {
-                cts.Cancel();
+                //cts.Cancel();
                 throw ex;
             }
             finally
