@@ -61,7 +61,8 @@ namespace Mature.Socket.Client.SuperSocket
         }
 
         EasyClient<StringPackageInfo> easyClient;
-        public bool IsConnected => easyClient.IsConnected;
+
+        public System.Net.Sockets.Socket Socket => easyClient?.Socket;
 
         public event EventHandler Connected;
         public event EventHandler Closed;

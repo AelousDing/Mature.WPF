@@ -7,7 +7,7 @@ namespace Mature.Socket
 {
     public interface ITCPClient
     {
-        bool IsConnected { get; }
+        System.Net.Sockets.Socket Socket { get; }
         Task<bool> ConnectAsync(string ip, ushort port);
         Task<string> SendAsync(ushort key, string body, int timeout);
         Task<TResponse> SendAsync<TRequest, TResponse>(ushort key, TRequest request, int timeout);
