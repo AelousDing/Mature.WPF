@@ -44,6 +44,8 @@ namespace Mature.Socket.Client.SuperSocket
         private void EasyClient_Connected(object sender, EventArgs e)
         {
             Console.WriteLine("EasyClient_Connected");
+            easyClient.Socket.SendTimeout = 30000;
+            easyClient.Socket.ReceiveTimeout = 30000;
             if (Connected != null)
             {
                 Connected(this, null);
