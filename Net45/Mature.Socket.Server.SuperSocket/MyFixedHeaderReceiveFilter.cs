@@ -31,18 +31,22 @@ namespace Mature.Socket.Server.SuperSocket
         protected override StringRequestInfo ResolveRequestInfo(ArraySegment<byte> header, byte[] bodyBuffer, int offset, int length)
         {
             bool isCompress = header.Array[2] == 0 ? false : true;
-            byte[] data = null;
-            if (isCompress)
+            string body = "";
+            if (bodyBuffer != null)
             {
-                //解压缩处理
-                ICompression compression = new GZip();
-                data = compression.Decompress(bodyBuffer.Skip(offset).Take(length).ToArray());
+                byte[] data = null;
+                if (isCompress)
+                {
+                    //解压缩处理
+                    ICompression compression = new GZip();
+                    data = compression.Decompress(bodyBuffer.Skip(offset).Take(length).ToArray());
+                }
+                else
+                {
+                    data = bodyBuffer.Skip(offset).Take(length).ToArray();
+                }
+                body = Encoding.UTF8.GetString(data);
             }
-            else
-            {
-                data = bodyBuffer.Skip(offset).Take(length).ToArray();
-            }
-            var body = Encoding.UTF8.GetString(data);
             var messageId = Encoding.ASCII.GetString(header.Array, 7, 32);
             return new StringRequestInfo(BitConverter.ToUInt16(header.Array, header.Offset).ToString(), body, new string[] { messageId });
         }
