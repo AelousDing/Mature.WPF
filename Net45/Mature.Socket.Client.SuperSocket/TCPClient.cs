@@ -26,6 +26,8 @@ namespace Mature.Socket.Client.SuperSocket
             this.contentBuilder = contentBuilder;
             this.dataFormat = dataFormat;
             easyClient = new EasyClient<StringPackageInfo>();
+            easyClient.KeepAliveTime = 60;//单位：秒
+            easyClient.KeepAliveInterval = 5;//单位：秒
             easyClient.Initialize(new MyFixedHeaderReceiveFilter());
             easyClient.NewPackageReceived += EasyClient_NewPackageReceived;
             easyClient.Connected += EasyClient_Connected;

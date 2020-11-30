@@ -16,7 +16,14 @@ namespace SuperSocket.ClientEngine
         private TaskCompletionSource<bool> m_ConnectTaskSource;
         private TaskCompletionSource<bool> m_CloseTaskSource;
         private bool m_Connected = false;
-
+        /// <summary>
+        /// KeepAlive开始时间
+        /// </summary>
+        public int KeepAliveTime { get; set; }
+        /// <summary>
+        /// KeepAlive进行的间隔
+        /// </summary>
+        public int KeepAliveInterval { get; set; }
         protected IPipelineProcessor PipeLineProcessor { get; set; }
 
 #if !NETFX_CORE || NETSTANDARD
