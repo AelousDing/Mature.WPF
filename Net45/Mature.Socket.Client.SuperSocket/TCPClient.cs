@@ -21,6 +21,7 @@ namespace Mature.Socket.Client.SuperSocket
         IContentBuilder contentBuilder;
         IDataFormat dataFormat;
         ConcurrentDictionary<string, TaskCompletionSource<StringPackageInfo>> task = new System.Collections.Concurrent.ConcurrentDictionary<string, TaskCompletionSource<StringPackageInfo>>();
+        ConcurrentDictionary<string, List<INotifyPacket>> notify = new ConcurrentDictionary<string, List<INotifyPacket>>();
         public TCPClient(IContentBuilder contentBuilder, IDataFormat dataFormat)
         {
             this.contentBuilder = contentBuilder;
@@ -118,6 +119,41 @@ namespace Mature.Socket.Client.SuperSocket
             if (Closed != null)
             {
                 Closed(this, null);
+            }
+        }
+
+        public void RegisterNotify<TResponse>(string key, Action<TResponse> action)
+        {
+            if (notify.ContainsKey(key))
+            {
+                notify[key].Add(new NotifyPacket<TResponse>(action));
+            }
+            else
+            {
+                notify.TryAdd(key, new List<INotifyPacket>
+                {
+                    new NotifyPacket<TResponse>(action)
+                });
+            }
+        }
+
+        public void UnRegisterNotify<TResponse>(string key, Action<TResponse> action)
+        {
+            if (notify.ContainsKey(key))
+            {
+                INotifyPacket notifyPacket = null;
+                foreach (var item in notify[key])
+                {
+                    if (item.Equals(action))
+                    {
+                        notifyPacket = item;
+                        break;
+                    }
+                }
+                if (notifyPacket != null)
+                {
+                    notify[key].Remove(notifyPacket);
+                }
             }
         }
     }
