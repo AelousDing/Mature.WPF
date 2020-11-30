@@ -23,7 +23,7 @@ namespace Mature.Socket.Server.SuperSocket
         {
             IContentBuilder contentBuilder = new ContentBuilder(new GZip(), new MD5DataValidation());
             Console.WriteLine($"接收到消息，Key：{requestInfo.Key} Body:{requestInfo.Body} MessageId:{requestInfo.GetFirstParam()}");
-            var data = contentBuilder.Builder(ushort.Parse(requestInfo.Key), requestInfo.Body, requestInfo.GetFirstParam());
+            var data = contentBuilder.Builder(requestInfo.Key, requestInfo.Body, requestInfo.GetFirstParam());
             session.Send(data, 0, data.Length);
         }
 

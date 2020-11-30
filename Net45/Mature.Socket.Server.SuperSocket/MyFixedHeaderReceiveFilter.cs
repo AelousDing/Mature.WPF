@@ -10,7 +10,7 @@ using System.Threading.Tasks;
 namespace Mature.Socket.Server.SuperSocket
 {
     /*自定义TCP应用协议：
-      2字节表示命令  C
+      20字节表示命令  C
       1字节表示报文是否压缩 Z
       4字节表示报文长度 L
       32字节表示消息ID V
@@ -19,18 +19,23 @@ namespace Mature.Socket.Server.SuperSocket
      */
     public class MyFixedHeaderReceiveFilter : FixedHeaderReceiveFilter<StringRequestInfo>
     {
-        public MyFixedHeaderReceiveFilter() : base(47)
+        const int CmdByteCount = 20;
+        const int CompressionByteCount = 1;
+        const int LengthByteCount = 4;
+        const int MessageIdCount = 32;
+        const int ValidationIdCount = 8;
+        public MyFixedHeaderReceiveFilter() : base(65)
         {
 
         }
         protected override int GetBodyLengthFromHeader(byte[] header, int offset, int length)
         {
-            return BitConverter.ToInt32(header.Skip(offset + 3).Take(4).ToArray(), 0);
+            return BitConverter.ToInt32(header.Skip(offset + CmdByteCount + CompressionByteCount).Take(LengthByteCount).ToArray(), 0);
         }
 
         protected override StringRequestInfo ResolveRequestInfo(ArraySegment<byte> header, byte[] bodyBuffer, int offset, int length)
         {
-            bool isCompress = header.Array[2] == 0 ? false : true;
+            bool isCompress = header.Array[CmdByteCount] == 0 ? false : true;
             string body = "";
             if (bodyBuffer != null)
             {
@@ -47,8 +52,8 @@ namespace Mature.Socket.Server.SuperSocket
                 }
                 body = Encoding.UTF8.GetString(data);
             }
-            var messageId = Encoding.ASCII.GetString(header.Array, 7, 32);
-            return new StringRequestInfo(BitConverter.ToUInt16(header.Array, header.Offset).ToString(), body, new string[] { messageId });
+            var messageId = Encoding.ASCII.GetString(header.Array, CmdByteCount + CompressionByteCount + LengthByteCount, MessageIdCount);
+            return new StringRequestInfo(Encoding.ASCII.GetString(header.Array, header.Offset, CmdByteCount).ToString(), body, new string[] { messageId });
         }
     }
 }

@@ -10,7 +10,7 @@ namespace Mature.Socket.Common.SuperSocket
 {
     //数据完整性校验
     //数据压缩
-    //报文格式：key（2位）压缩标志位（1位）报文长度（4位）校验位（16位）正文
+    //报文格式：key（20位）压缩标志位（1位）报文长度（4位）校验位（16位）正文
     //对于报文中的数值类型的占位符，按照右面高位的格式传输（使用的是BitConverter转换和读取字节数组）
     public class ContentBuilder : IContentBuilder
     {
@@ -22,22 +22,21 @@ namespace Mature.Socket.Common.SuperSocket
             this.compression = compression;
             this.dataValidation = dataValidation;
         }
-        public byte[] Builder(ushort key, string body, string messageId)
+        public byte[] Builder(string key, string body, string messageId)
         {
             return Builder(key, body, messageId, false);
         }
 
-        public byte[] Builder(ushort key, string body, string messageId, bool isCompress)
+        public byte[] Builder(string key, string body, string messageId, bool isCompress)
         {
             byte[] bodyBuffer = Encoding.GetBytes(body);
             var validation = dataValidation.Validation(bodyBuffer);
             if (isCompress)
             {
-                //GZipStream
                 bodyBuffer = compression.Compress(bodyBuffer);
             }
             List<byte> data = new List<byte>();
-            data.AddRange(BitConverter.GetBytes(key));
+            data.AddRange(Encoding.ASCII.GetBytes(key));
             data.AddRange(BitConverter.GetBytes(isCompress));
             data.AddRange(BitConverter.GetBytes(bodyBuffer.Length));
             data.AddRange(Encoding.ASCII.GetBytes(messageId));

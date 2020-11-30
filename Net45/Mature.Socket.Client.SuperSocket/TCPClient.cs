@@ -76,8 +76,16 @@ namespace Mature.Socket.Client.SuperSocket
             return isConnect;
         }
 
-        public async Task<string> SendAsync(ushort key, string body, int timeout)
+        public async Task<string> SendAsync(string key, string body, int timeout)
         {
+            if (string.IsNullOrEmpty(key) || key.Length >= 20)
+            {
+                throw new Exception("The key length is no more than 20.");
+            }
+            else
+            {
+                key = key.PadRight(20, ' ');
+            }
             TaskCompletionSource<StringPackageInfo> taskCompletionSource = new TaskCompletionSource<StringPackageInfo>();
             string messageId = Guid.NewGuid().ToString().Replace("-", "");
             task.TryAdd(messageId, taskCompletionSource);
@@ -99,7 +107,7 @@ namespace Mature.Socket.Client.SuperSocket
             }
             return result?.Body;
         }
-        public async Task<TResponse> SendAsync<TRequest, TResponse>(ushort key, TRequest request, int timeout)
+        public async Task<TResponse> SendAsync<TRequest, TResponse>(string key, TRequest request, int timeout)
         {
             string body = await SendAsync(key, dataFormat.Serialize<TRequest>(request), timeout);
             return dataFormat.Deserialize<TResponse>(body);
