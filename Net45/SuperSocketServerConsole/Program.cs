@@ -4,6 +4,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace SuperSocketServerConsole
@@ -16,6 +17,11 @@ namespace SuperSocketServerConsole
             server.Start();
             server.NewSessionConnected += Server_NewSessionConnected;
             server.SessionClosed += Server_SessionClosed;
+            Timer timer = new Timer(p =>
+            {
+                server.Notify();
+            },
+                                   null, 0, 1000); ;
             Console.ReadLine();
         }
 

@@ -88,6 +88,7 @@ namespace Mature.Socket.Server.SuperSocket
         {
             IContentBuilder contentBuilder = new ContentBuilder(new GZip(), new MD5DataValidation());
             Console.WriteLine($"接收到消息，Key：{requestInfo.Key} Body:{requestInfo.Body} MessageId:{requestInfo.GetFirstParam()}");
+
             var data = contentBuilder.Builder(requestInfo.Key, requestInfo.Body, requestInfo.GetFirstParam());
             session.Send(data, 0, data.Length);
         }
@@ -170,6 +171,19 @@ namespace Mature.Socket.Server.SuperSocket
             if (bootstrap != null)
             {
                 bootstrap.Stop();
+            }
+        }
+
+        public void Notify()
+        {
+            var sessions = (bootstrap?.AppServers?.First() as AppServer)?.GetAllSessions();
+            IContentBuilder contentBuilder = new ContentBuilder(new GZip(), new MD5DataValidation());
+            string messageId = Guid.NewGuid().ToString().Replace("-", "");
+            var data = contentBuilder.Builder("Notify", "Notify Test Server封装不了啊，分离不出来连接对象", messageId);
+
+            foreach (var item in sessions)
+            {
+                item.Send(data, 0, data.Length);
             }
         }
     }
