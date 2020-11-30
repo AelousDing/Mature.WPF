@@ -38,7 +38,7 @@ namespace SuperSocketClientWPF
             bool isConnected = await client.ConnectAsync(tbIp.Text, ushort.Parse(tbPort.Text));
             Console.WriteLine(isConnected ? "连接成功" : "连接失败");
         }
-        const ushort TestCmd = 0x01;
+        const string TestCmd = "Request";
         private async void btnSend_Click(object sender, RoutedEventArgs e)
         {
             try
