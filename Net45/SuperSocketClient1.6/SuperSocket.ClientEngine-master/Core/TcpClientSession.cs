@@ -242,7 +242,27 @@ namespace SuperSocket.ClientEngine
 #if !SILVERLIGHT && !NETFX_CORE
             try
             {
-                Client.SetSocketOption(SocketOptionLevel.Socket, SocketOptionName.KeepAlive, true);
+                uint dummy = 0;
+                byte[] m_KeepAliveOptionValues = new byte[Marshal.SizeOf(dummy) * 3];
+                byte[] m_KeepAliveOptionOutValues = new byte[m_KeepAliveOptionValues.Length];
+                //whether enable KeepAlive
+                BitConverter.GetBytes((uint)1).CopyTo(m_KeepAliveOptionValues, 0);
+                //how long will start first keep alive
+                BitConverter.GetBytes((uint)(KeepAliveTime * 1000)).CopyTo(m_KeepAliveOptionValues, Marshal.SizeOf(dummy));
+                //keep alive interval
+                BitConverter.GetBytes((uint)(KeepAliveInterval * 1000)).CopyTo(m_KeepAliveOptionValues, Marshal.SizeOf(dummy) * 2);
+
+                //Set keep alive
+
+                try
+                {
+                    Client.IOControl(IOControlCode.KeepAliveValues, m_KeepAliveOptionValues, m_KeepAliveOptionOutValues);
+                }
+                catch
+                {
+                    Client.SetSocketOption(SocketOptionLevel.Socket, SocketOptionName.KeepAlive, m_KeepAliveOptionValues);
+                }
+
             }
             catch
             {

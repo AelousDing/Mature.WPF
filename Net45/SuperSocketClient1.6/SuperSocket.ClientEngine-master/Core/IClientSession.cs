@@ -10,7 +10,15 @@ namespace SuperSocket.ClientEngine
     public interface IClientSession
     {
         Socket Socket { get; }
-        
+        /// <summary>
+        /// KeepAlive开始时间
+        /// </summary>
+        int KeepAliveTime { get; set; }
+        /// <summary>
+        /// KeepAlive进行的间隔
+        /// </summary>
+        int KeepAliveInterval { get; set; }
+
         IProxyConnector Proxy { get; set; }
 
         int ReceiveBufferSize { get; set; }
