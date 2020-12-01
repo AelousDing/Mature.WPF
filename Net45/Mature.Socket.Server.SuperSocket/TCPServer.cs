@@ -180,7 +180,10 @@ namespace Mature.Socket.Server.SuperSocket
             IContentBuilder contentBuilder = new ContentBuilder(new GZip(), new MD5DataValidation());
             string messageId = Guid.NewGuid().ToString().Replace("-", "");
             var data = contentBuilder.Builder("Notify", "Notify Test Server封装不了啊，分离不出来连接对象", messageId);
-
+            if (sessions == null)
+            {
+                return;
+            }
             foreach (var item in sessions)
             {
                 item.Send(data, 0, data.Length);

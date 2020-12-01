@@ -61,6 +61,16 @@ namespace Mature.Socket.Client.SuperSocket
             {
                 tcs.TrySetResult(e.Package);
             }
+            else
+            {
+                if (notify.ContainsKey(e.Package.Key))
+                {
+                    foreach (var item in notify[e.Package.Key])
+                    {
+                        item.Raise(e.Package);
+                    }
+                }
+            }
         }
 
         EasyClient<StringPackageInfo> easyClient;
