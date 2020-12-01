@@ -16,7 +16,6 @@ namespace Mature.Socket.Server.SuperSocket
     {
         public MatureServer() : base(new DefaultReceiveFilterFactory<MyFixedHeaderReceiveFilter, StringRequestInfo>())
         {
-
         }
 
         protected override bool Setup(IRootConfig rootConfig, IServerConfig config)

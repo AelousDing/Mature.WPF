@@ -1,4 +1,7 @@
 ﻿using Mature.Socket;
+using Mature.Socket.Common.SuperSocket;
+using Mature.Socket.Common.SuperSocket.Compression;
+using Mature.Socket.Common.SuperSocket.Validation;
 using Mature.Socket.Server.SuperSocket;
 using System;
 using System.Collections.Generic;
@@ -17,12 +20,17 @@ namespace SuperSocketServerConsole
             server.Start();
             server.NewSessionConnected += Server_NewSessionConnected;
             server.SessionClosed += Server_SessionClosed;
-            Timer timer = new Timer(p =>
-            {
-                server.Notify();
-            },
-                                   null, 0, 1000); ;
+            server.NewRequestReceived += Server_NewRequestReceived;
             Console.ReadLine();
+        }
+
+        private static void Server_NewRequestReceived(ISessionWrapper arg1, RequestInfo arg2)
+        {
+            IContentBuilder contentBuilder = new ContentBuilder(new GZip(), new MD5DataValidation());
+            Console.WriteLine($"接收到消息，Key：{arg2.Key} Body:{arg2.Body} MessageId:{arg2.Parameters[0]}");
+
+            var data = contentBuilder.Builder(arg2.Key, arg2.Body, arg2.Parameters[0]);
+            arg1.Send(data, 0, data.Length);
         }
 
         private static void Server_SessionClosed(object sender, SessionInfo e)

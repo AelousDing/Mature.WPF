@@ -9,10 +9,10 @@ namespace Mature.Socket
     {
         IEnumerable<SessionInfo> GetAllSession();
         SessionInfo GetSessionByID(string sessionID);
-        void Notify();
         bool Start();
         void Stop();
         event EventHandler<SessionInfo> NewSessionConnected;
+        event Action<ISessionWrapper, RequestInfo> NewRequestReceived;
         event EventHandler<SessionInfo> SessionClosed;
     }
 }

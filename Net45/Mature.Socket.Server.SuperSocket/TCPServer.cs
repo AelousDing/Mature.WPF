@@ -3,6 +3,7 @@ using Mature.Socket.Common.SuperSocket;
 using Mature.Socket.Common.SuperSocket.Compression;
 using Mature.Socket.Common.SuperSocket.Validation;
 using SuperSocket.SocketBase;
+using SuperSocket.SocketBase.Config;
 using SuperSocket.SocketBase.Protocol;
 using SuperSocket.SocketEngine;
 using System;
@@ -18,29 +19,26 @@ namespace Mature.Socket.Server.SuperSocket
     {
         public IEnumerable<SessionInfo> GetAllSession()
         {
-            if (bootstrap != null && bootstrap.AppServers != null && bootstrap.AppServers.Count() > 0)
+            var sessions = server?.GetAllSessions();
+            if (sessions != null && sessions.Count() > 0)
             {
-                var sessions = (bootstrap.AppServers.First() as AppServer).GetAllSessions();
-                if (sessions != null && sessions.Count() > 0)
+                foreach (var item in sessions)
                 {
-                    foreach (var item in sessions)
+                    yield return new SessionInfo()
                     {
-                        yield return new SessionInfo()
-                        {
-                            SessionID = item.SessionID,
-                            LastActiveTime = item.LastActiveTime,
-                            StartTime = item.StartTime,
-                            LocalEndPoint = item.LocalEndPoint,
-                            RemoteEndPoint = item.RemoteEndPoint
-                        };
-                    }
+                        SessionID = item.SessionID,
+                        LastActiveTime = item.LastActiveTime,
+                        StartTime = item.StartTime,
+                        LocalEndPoint = item.LocalEndPoint,
+                        RemoteEndPoint = item.RemoteEndPoint
+                    };
                 }
             }
         }
 
         public SessionInfo GetSessionByID(string sessionID)
         {
-            var session = (bootstrap?.AppServers?.First() as AppServer).GetAllSessions()?.FirstOrDefault(p => p.SessionID == sessionID);
+            var session = server?.GetAllSessions()?.FirstOrDefault(p => p.SessionID == sessionID);
             return session == null ? null : new SessionInfo()
             {
                 SessionID = session.SessionID,
@@ -51,10 +49,9 @@ namespace Mature.Socket.Server.SuperSocket
             };
         }
 
-        IBootstrap bootstrap;
-
         public event EventHandler<SessionInfo> NewSessionConnected;
         public event EventHandler<SessionInfo> SessionClosed;
+        public event Action<ISessionWrapper, RequestInfo> NewRequestReceived;
 
         private void OnNewSessionConnected(SessionInfo sessionInfo)
         {
@@ -70,30 +67,41 @@ namespace Mature.Socket.Server.SuperSocket
                 SessionClosed(this, sessionInfo);
             }
         }
-
-        private void RegisterSessionStateChanged(AppServer appserver)
+        private void OnNewRequestReceived(ISessionWrapper session, RequestInfo requestInfo)
         {
-            if (bootstrap.AppServers != null)
+            if (NewRequestReceived != null)
             {
-                appserver.NewSessionConnected -= TCPServer_NewSessionConnected;
-                appserver.NewSessionConnected += TCPServer_NewSessionConnected;
-                appserver.SessionClosed -= TCPServer_SessionClosed;
-                appserver.SessionClosed += TCPServer_SessionClosed;
-                appserver.NewRequestReceived -= TCPServer_NewRequestReceived;
-                appserver.NewRequestReceived -= TCPServer_NewRequestReceived;
+                NewRequestReceived(session, requestInfo);
             }
         }
-
-        private void TCPServer_NewRequestReceived(AppSession session, StringRequestInfo requestInfo)
+        MatureServer server;
+        public bool Start()
         {
-            IContentBuilder contentBuilder = new ContentBuilder(new GZip(), new MD5DataValidation());
-            Console.WriteLine($"接收到消息，Key：{requestInfo.Key} Body:{requestInfo.Body} MessageId:{requestInfo.GetFirstParam()}");
-
-            var data = contentBuilder.Builder(requestInfo.Key, requestInfo.Body, requestInfo.GetFirstParam());
-            session.Send(data, 0, data.Length);
+            server = new MatureServer();
+            var serverConfig = new ServerConfig
+            {
+                Port = 2020,
+                KeepAliveInterval = 5,
+                KeepAliveTime = 60
+            };
+            if (!server.Setup(serverConfig))
+            {
+                Console.WriteLine("Failed to setup!");
+                return false;
+            }
+            if (!server.Start())
+            {
+                Console.WriteLine("Failed to setup!");
+                return false;
+            }
+            server.NewRequestReceived += Server_NewRequestReceived;
+            server.NewSessionConnected += Server_NewSessionConnected;
+            server.SessionClosed += Server_SessionClosed;
+            Console.WriteLine("The server started successfully!");
+            return true;
         }
 
-        private void TCPServer_SessionClosed(AppSession session, CloseReason value)
+        private void Server_SessionClosed(MatureSession session, CloseReason value)
         {
             OnSessionClosed(new SessionInfo
             {
@@ -105,7 +113,7 @@ namespace Mature.Socket.Server.SuperSocket
             });
         }
 
-        private void TCPServer_NewSessionConnected(AppSession session)
+        private void Server_NewSessionConnected(MatureSession session)
         {
             OnNewSessionConnected(new SessionInfo
             {
@@ -117,76 +125,22 @@ namespace Mature.Socket.Server.SuperSocket
             });
         }
 
-        public bool Start()
+        private void Server_NewRequestReceived(MatureSession session, StringRequestInfo requestInfo)
         {
-            bootstrap = BootstrapFactory.CreateBootstrap();
-            if (!bootstrap.Initialize())
+            OnNewRequestReceived(new SessionWrapper(session), new RequestInfo
             {
-                Console.WriteLine("Failed to initialize SuperSocket ServiceEngine! Please check error log for more information!");
-                return false;
-            }
-            Console.WriteLine("Starting...");
-
-            var result = bootstrap.Start();
-
-            Console.WriteLine("-------------------------------------------------------------------");
-
-            foreach (var server in bootstrap.AppServers)
-            {
-                if (server.State == ServerState.Running)
-                {
-                    Console.WriteLine("- {0} has been started", server.Name);
-                }
-                else
-                {
-                    Console.WriteLine("- {0} failed to start", server.Name);
-                }
-            }
-
-            Console.WriteLine("-------------------------------------------------------------------");
-
-            switch (result)
-            {
-                case (StartResult.None):
-                    Console.WriteLine("No server is configured, please check you configuration!");
-                    return false;
-
-                case (StartResult.Success):
-                    Console.WriteLine("The SuperSocket ServiceEngine has been started!");
-                    break;
-
-                case (StartResult.Failed):
-                    Console.WriteLine("Failed to start the SuperSocket ServiceEngine! Please check error log for more information!");
-                    return false;
-
-                case (StartResult.PartialSuccess):
-                    Console.WriteLine("Some server instances were started successfully, but the others failed! Please check error log for more information!");
-                    break;
-            }
-            return true;
+                Key = requestInfo.Key,
+                Body = requestInfo.Body,
+                Parameters = requestInfo.Parameters
+            });
+            
         }
 
         public void Stop()
         {
-            if (bootstrap != null)
+            if (server != null)
             {
-                bootstrap.Stop();
-            }
-        }
-
-        public void Notify()
-        {
-            var sessions = (bootstrap?.AppServers?.First() as AppServer)?.GetAllSessions();
-            IContentBuilder contentBuilder = new ContentBuilder(new GZip(), new MD5DataValidation());
-            string messageId = Guid.NewGuid().ToString().Replace("-", "");
-            var data = contentBuilder.Builder("Notify", "Notify Test Server封装不了啊，分离不出来连接对象", messageId);
-            if (sessions == null)
-            {
-                return;
-            }
-            foreach (var item in sessions)
-            {
-                item.Send(data, 0, data.Length);
+                server.Stop();
             }
         }
     }
