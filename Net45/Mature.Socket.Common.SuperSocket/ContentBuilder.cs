@@ -38,7 +38,7 @@ namespace Mature.Socket.Common.SuperSocket
             List<byte> data = new List<byte>();
             data.AddRange(Encoding.ASCII.GetBytes(key));
             data.AddRange(BitConverter.GetBytes(isCompress));
-            data.AddRange(BitConverter.GetBytes(bodyBuffer.Length));
+            data.AddRange(BitConverter.GetBytes(bodyBuffer.Length).Reverse());
             data.AddRange(Encoding.ASCII.GetBytes(messageId));
             data.AddRange(validation);
             data.AddRange(bodyBuffer);

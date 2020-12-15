@@ -37,7 +37,7 @@ namespace Mature.Socket.Client.SuperSocket
             bool isCompression = data[0] == 0 ? false : true;
             data = new byte[LengthByteCount];
             bufferStream.Read(data, 0, LengthByteCount);
-            var length = BitConverter.ToInt32(data, 0);
+            var length = BitConverter.ToInt32(data.Reverse().ToArray(), 0);
             data = new byte[MessageIdCount];
             bufferStream.Read(data, 0, MessageIdCount);
             var messageId = Encoding.ASCII.GetString(data);
@@ -61,7 +61,7 @@ namespace Mature.Socket.Client.SuperSocket
 
         protected override int GetBodyLengthFromHeader(IBufferStream bufferStream, int length)
         {
-            var bodyLen = BitConverter.ToInt32(bufferStream.Buffers[0].Skip(CmdByteCount+ CompressionByteCount).Take(LengthByteCount).ToArray(), 0);
+            var bodyLen = BitConverter.ToInt32(bufferStream.Buffers[0].Skip(CmdByteCount+ CompressionByteCount).Take(LengthByteCount).Reverse().ToArray(), 0);
             Console.WriteLine($"接收到报文长度{bodyLen}");
             return bodyLen;
         }

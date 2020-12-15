@@ -30,7 +30,7 @@ namespace Mature.Socket.Server.SuperSocket
         }
         protected override int GetBodyLengthFromHeader(byte[] header, int offset, int length)
         {
-            return BitConverter.ToInt32(header.Skip(offset + CmdByteCount + CompressionByteCount).Take(LengthByteCount).ToArray(), 0);
+            return BitConverter.ToInt32(header.Skip(offset + CmdByteCount + CompressionByteCount).Take(LengthByteCount).Reverse().ToArray(), 0);
         }
 
         protected override StringRequestInfo ResolveRequestInfo(ArraySegment<byte> header, byte[] bodyBuffer, int offset, int length)
