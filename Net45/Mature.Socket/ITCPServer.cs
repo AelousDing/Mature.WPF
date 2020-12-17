@@ -12,7 +12,7 @@ namespace Mature.Socket
         bool Start();
         void Stop();
         event EventHandler<SessionInfo> NewSessionConnected;
-        event Action<ISessionWrapper, RequestInfo> NewRequestReceived;
+        event Action<ISessionWrapper, StringPackageInfo> NewRequestReceived;
         event EventHandler<SessionInfo> SessionClosed;
     }
 }

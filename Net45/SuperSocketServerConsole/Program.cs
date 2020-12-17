@@ -24,11 +24,11 @@ namespace SuperSocketServerConsole
             Console.ReadLine();
         }
 
-        private static void Server_NewRequestReceived(ISessionWrapper arg1, RequestInfo arg2)
+        private static void Server_NewRequestReceived(ISessionWrapper arg1, StringPackageInfo arg2)
         {
             IContentBuilder contentBuilder = new ContentBuilder(new GZip(), new MD5DataValidation());
             Console.WriteLine($"接收到消息，Key：{arg2.Key} Body:{arg2.Body} MessageId:{arg2.Parameters[0]}");
-
+            
             var data = contentBuilder.Builder(arg2.Key, arg2.Body, arg2.Parameters[0]);
             arg1.Send(data, 0, data.Length);
         }

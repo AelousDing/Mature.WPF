@@ -51,7 +51,7 @@ namespace Mature.Socket.Server.SuperSocket
 
         public event EventHandler<SessionInfo> NewSessionConnected;
         public event EventHandler<SessionInfo> SessionClosed;
-        public event Action<ISessionWrapper, RequestInfo> NewRequestReceived;
+        public event Action<ISessionWrapper, StringPackageInfo> NewRequestReceived;
 
         private void OnNewSessionConnected(SessionInfo sessionInfo)
         {
@@ -67,7 +67,7 @@ namespace Mature.Socket.Server.SuperSocket
                 SessionClosed(this, sessionInfo);
             }
         }
-        private void OnNewRequestReceived(ISessionWrapper session, RequestInfo requestInfo)
+        private void OnNewRequestReceived(ISessionWrapper session, StringPackageInfo requestInfo)
         {
             if (NewRequestReceived != null)
             {
@@ -127,13 +127,12 @@ namespace Mature.Socket.Server.SuperSocket
 
         private void Server_NewRequestReceived(MatureSession session, StringRequestInfo requestInfo)
         {
-            OnNewRequestReceived(new SessionWrapper(session), new RequestInfo
+            OnNewRequestReceived(new SessionWrapper(session), new StringPackageInfo
             {
                 Key = requestInfo.Key,
                 Body = requestInfo.Body,
                 Parameters = requestInfo.Parameters
             });
-            
         }
 
         public void Stop()

@@ -15,7 +15,7 @@ namespace Mature.Socket.Client.SuperSocket
       16字节表示数据校验位 V
       报文头共计23字节
      */
-    public class MyFixedHeaderReceiveFilter : FixedHeaderReceiveFilter<StringPackageInfo>
+    public class MyFixedHeaderReceiveFilter : FixedHeaderReceiveFilter<global::SuperSocket.ProtoBase.StringPackageInfo>
     {
         const int CmdByteCount = 20;
         const int CompressionByteCount = 1;
@@ -26,7 +26,7 @@ namespace Mature.Socket.Client.SuperSocket
         {
 
         }
-        public override StringPackageInfo ResolvePackage(IBufferStream bufferStream)
+        public override global::SuperSocket.ProtoBase.StringPackageInfo ResolvePackage(IBufferStream bufferStream)
         {
             byte[] data;
             data = new byte[CmdByteCount];
@@ -56,7 +56,7 @@ namespace Mature.Socket.Client.SuperSocket
                 body = data;
             }
             string bodyString = Encoding.UTF8.GetString(body);
-            return new StringPackageInfo(key, bodyString, new string[] { messageId });
+            return new global::SuperSocket.ProtoBase.StringPackageInfo(key, bodyString, new string[] { messageId });
         }
 
         protected override int GetBodyLengthFromHeader(IBufferStream bufferStream, int length)

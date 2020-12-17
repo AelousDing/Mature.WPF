@@ -39,16 +39,12 @@ namespace Mature.Socket.Server.SuperSocket
             string body = "";
             if (bodyBuffer != null)
             {
-                byte[] data = null;
+                byte[] data = bodyBuffer.Skip(offset).Take(length).ToArray();
                 if (isCompress)
                 {
                     //解压缩处理
                     ICompression compression = new GZip();
-                    data = compression.Decompress(bodyBuffer.Skip(offset).Take(length).ToArray());
-                }
-                else
-                {
-                    data = bodyBuffer.Skip(offset).Take(length).ToArray();
+                    data = compression.Decompress(data);
                 }
                 body = Encoding.UTF8.GetString(data);
             }

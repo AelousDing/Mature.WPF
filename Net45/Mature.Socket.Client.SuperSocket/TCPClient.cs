@@ -1,16 +1,10 @@
-﻿using Mature.Socket;
-using Mature.Socket.Common.SuperSocket;
+﻿using Mature.Socket.Common.SuperSocket;
 using Mature.Socket.Common.SuperSocket.DataFormat;
 using SuperSocket.ClientEngine;
-using SuperSocket.ProtoBase;
 using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
-using System.Linq;
 using System.Net;
-using System.Net.Sockets;
-using System.Runtime.InteropServices;
-using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -20,13 +14,13 @@ namespace Mature.Socket.Client.SuperSocket
     {
         IContentBuilder contentBuilder;
         IDataFormat dataFormat;
-        ConcurrentDictionary<string, TaskCompletionSource<StringPackageInfo>> task = new System.Collections.Concurrent.ConcurrentDictionary<string, TaskCompletionSource<StringPackageInfo>>();
+        ConcurrentDictionary<string, TaskCompletionSource<global::SuperSocket.ProtoBase.StringPackageInfo>> task = new System.Collections.Concurrent.ConcurrentDictionary<string, TaskCompletionSource<global::SuperSocket.ProtoBase.StringPackageInfo>>();
         ConcurrentDictionary<string, List<INotifyPacket>> notify = new ConcurrentDictionary<string, List<INotifyPacket>>();
         public TCPClient(IContentBuilder contentBuilder, IDataFormat dataFormat)
         {
             this.contentBuilder = contentBuilder;
             this.dataFormat = dataFormat;
-            easyClient = new EasyClient<StringPackageInfo>();
+            easyClient = new EasyClient<global::SuperSocket.ProtoBase.StringPackageInfo>();
             easyClient.KeepAliveTime = 60;//单位：秒
             easyClient.KeepAliveInterval = 5;//单位：秒
             easyClient.Initialize(new MyFixedHeaderReceiveFilter());
@@ -53,11 +47,11 @@ namespace Mature.Socket.Client.SuperSocket
             }
         }
 
-        private void EasyClient_NewPackageReceived(object sender, PackageEventArgs<StringPackageInfo> e)
+        private void EasyClient_NewPackageReceived(object sender, PackageEventArgs<global::SuperSocket.ProtoBase.StringPackageInfo> e)
         {
             Console.WriteLine($"Key:{e.Package.Key}  Body:{e.Package.Body}");
 
-            if (task.TryGetValue(e.Package.GetFirstParam(), out TaskCompletionSource<StringPackageInfo> tcs))
+            if (task.TryGetValue(e.Package.GetFirstParam(), out TaskCompletionSource<global::SuperSocket.ProtoBase.StringPackageInfo> tcs))
             {
                 tcs.TrySetResult(e.Package);
             }
@@ -73,7 +67,7 @@ namespace Mature.Socket.Client.SuperSocket
             }
         }
 
-        EasyClient<StringPackageInfo> easyClient;
+        EasyClient<global::SuperSocket.ProtoBase.StringPackageInfo> easyClient;
 
         public System.Net.Sockets.Socket Socket => easyClient?.Socket;
 
@@ -97,10 +91,14 @@ namespace Mature.Socket.Client.SuperSocket
             {
                 key = key.PadRight(20, ' ');
             }
-            TaskCompletionSource<StringPackageInfo> taskCompletionSource = new TaskCompletionSource<StringPackageInfo>();
+            TaskCompletionSource<global::SuperSocket.ProtoBase.StringPackageInfo> taskCompletionSource = new TaskCompletionSource<global::SuperSocket.ProtoBase.StringPackageInfo>();
+            //超时处理
+            CancellationTokenSource cts = new CancellationTokenSource();
+            cts.Token.Register(()=> taskCompletionSource.TrySetException(new TimeoutException()));
+            cts.CancelAfter(timeout);
             string messageId = Guid.NewGuid().ToString().Replace("-", "");
             task.TryAdd(messageId, taskCompletionSource);
-            StringPackageInfo result = null;
+            global::SuperSocket.ProtoBase.StringPackageInfo result = null;
             try
             {
                 Console.WriteLine($"发送消息，消息ID：{messageId} 消息命令标识：{key} 消息内容：{body}");
@@ -114,7 +112,8 @@ namespace Mature.Socket.Client.SuperSocket
             }
             finally
             {
-                task.TryRemove(messageId, out TaskCompletionSource<StringPackageInfo> tcs);
+                cts.Dispose();
+                task.TryRemove(messageId, out TaskCompletionSource<global::SuperSocket.ProtoBase.StringPackageInfo> tcs);
             }
             return result?.Body;
         }
