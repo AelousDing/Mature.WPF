@@ -64,8 +64,6 @@ namespace Mature.Socket.Client.SuperSocket
 
         EasyClient<global::SuperSocket.ProtoBase.StringPackageInfo> easyClient;
 
-        public System.Net.Sockets.Socket Socket => easyClient?.Socket;
-
         public event EventHandler Connected;
         public event EventHandler Closed;
 
