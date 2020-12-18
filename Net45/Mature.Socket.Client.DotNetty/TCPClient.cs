@@ -8,6 +8,7 @@ using Mature.Socket.ContentBuilder;
 using Mature.Socket.DataFormat;
 using Mature.Socket.Notify;
 using System;
+using System.Collections.Concurrent;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -26,6 +27,7 @@ namespace Mature.Socket.Client.DotNetty
 
         IContentBuilder contentBuilder;
         IDataFormat dataFormat;
+        ConcurrentDictionary<string, TaskCompletionSource<StringPackageInfo>> task = new ConcurrentDictionary<string, TaskCompletionSource<StringPackageInfo>>();
         public TCPClient(IContentBuilder contentBuilder, IDataFormat dataFormat)
         {
             this.contentBuilder = contentBuilder;
