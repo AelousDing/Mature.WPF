@@ -21,16 +21,9 @@ namespace Mature.Socket.Common.DotNetty
             }
             IByteBufferAllocator allocator = context.Allocator;
             IByteBuffer byteBuffer = allocator.DirectBuffer();
-            contentBuilder.Builder(message.Key, message.Body, message.MessageId, message.IsCompressed);
-            byteBuffer.WriteBytes(Encoding.ASCII.GetBytes(message.Key));
-            byteBuffer.WriteBoolean(message.IsCompressed);
-            byte[] body = Encoding.UTF8.GetBytes(message.Body);
-            if (message.IsCompressed)
-            {
-
-            }
-
-
+            byte[] content= contentBuilder.Builder(message.Key, message.Body, message.MessageId, message.IsCompressed);
+            byteBuffer.WriteBytes(content);
+            context.WriteAndFlushAsync(byteBuffer);
         }
     }
 }
