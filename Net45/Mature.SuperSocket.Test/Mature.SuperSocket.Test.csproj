@@ -57,9 +57,9 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\Mature.Socket.Common.SuperSocket\Mature.Socket.Common.SuperSocket.csproj">
-      <Project>{26a109ec-eeff-4f40-9e1d-07375fa21c85}</Project>
-      <Name>Mature.Socket.Common.SuperSocket</Name>
+    <ProjectReference Include="..\Mature.Socket\Mature.Socket.csproj">
+      <Project>{4f3266c3-78d4-418b-becb-4fdb3d3c1846}</Project>
+      <Name>Mature.Socket</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(VSToolsPath)\TeamTest\Microsoft.TestTools.targets" Condition="Exists('$(VSToolsPath)\TeamTest\Microsoft.TestTools.targets')" />

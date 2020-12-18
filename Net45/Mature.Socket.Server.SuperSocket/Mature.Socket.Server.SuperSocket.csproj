@@ -64,10 +64,6 @@
     <Compile Include="TCPServer.cs" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\Mature.Socket.Common.SuperSocket\Mature.Socket.Common.SuperSocket.csproj">
-      <Project>{26A109EC-EEFF-4F40-9E1D-07375FA21C85}</Project>
-      <Name>Mature.Socket.Common.SuperSocket</Name>
-    </ProjectReference>
     <ProjectReference Include="..\Mature.Socket\Mature.Socket.csproj">
       <Project>{4f3266c3-78d4-418b-becb-4fdb3d3c1846}</Project>
       <Name>Mature.Socket</Name>

@@ -1,7 +1,7 @@
-﻿using System;
-using System.Text;
-using Mature.Socket.Common.SuperSocket.Compression;
+﻿using Mature.Socket.Compression;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
+using System;
+using System.Text;
 
 namespace Mature.SuperSocket.Test
 {

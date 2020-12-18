@@ -1,10 +1,9 @@
-﻿using Mature.Socket.Common.SuperSocket;
-using Mature.Socket.Common.SuperSocket.DataFormat;
+﻿using Mature.Socket.ContentBuilder;
+using Mature.Socket.DataFormat;
 using Mature.Socket.Notify;
 using SuperSocket.ClientEngine;
 using System;
 using System.Collections.Concurrent;
-using System.Collections.Generic;
 using System.Net;
 using System.Threading;
 using System.Threading.Tasks;

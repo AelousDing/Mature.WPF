@@ -1,10 +1,8 @@
-﻿using Mature.Socket.Common.SuperSocket.Compression;
+﻿using Mature.Socket.Compression;
 using SuperSocket.ProtoBase;
 using System;
-using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using System.Threading.Tasks;
 
 namespace Mature.Socket.Client.SuperSocket
 {

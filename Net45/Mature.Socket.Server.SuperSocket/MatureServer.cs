@@ -1,14 +1,7 @@
-﻿using Mature.Socket.Common.SuperSocket;
-using Mature.Socket.Common.SuperSocket.Compression;
-using Mature.Socket.Common.SuperSocket.Validation;
-using SuperSocket.SocketBase;
+﻿using SuperSocket.SocketBase;
 using SuperSocket.SocketBase.Config;
 using SuperSocket.SocketBase.Protocol;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Mature.Socket.Server.SuperSocket
 {

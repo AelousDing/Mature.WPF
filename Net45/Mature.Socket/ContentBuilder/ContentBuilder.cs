@@ -1,12 +1,11 @@
-﻿using Mature.Socket.Common.SuperSocket.Compression;
-using Mature.Socket.Common.SuperSocket.Validation;
+﻿using Mature.Socket.Compression;
+using Mature.Socket.Validation;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using System.Threading.Tasks;
 
-namespace Mature.Socket.Common.SuperSocket
+namespace Mature.Socket.ContentBuilder
 {
     //数据完整性校验
     //数据压缩

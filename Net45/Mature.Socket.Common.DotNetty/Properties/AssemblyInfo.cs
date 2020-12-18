@@ -1,15 +1,14 @@
 ﻿using System.Reflection;
-using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 
 // 有关程序集的一般信息由以下
 // 控制。更改这些特性值可修改
 // 与程序集关联的信息。
-[assembly: AssemblyTitle("Mature.Socket.Common.SuperSocket")]
+[assembly: AssemblyTitle("Mature.Socket.Common.DotNetty")]
 [assembly: AssemblyDescription("")]
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("")]
-[assembly: AssemblyProduct("Mature.Socket.Common.SuperSocket")]
+[assembly: AssemblyProduct("Mature.Socket.Common.DotNetty")]
 [assembly: AssemblyCopyright("Copyright ©  2020")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
@@ -20,7 +19,7 @@ using System.Runtime.InteropServices;
 [assembly: ComVisible(false)]
 
 // 如果此项目向 COM 公开，则下列 GUID 用于类型库的 ID
-[assembly: Guid("26a109ec-eeff-4f40-9e1d-07375fa21c85")]
+[assembly: Guid("baaf5c89-5076-4fd4-9dfe-dc2c80933d81")]
 
 // 程序集的版本信息由下列四个值组成: 
 //

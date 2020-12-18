@@ -1,14 +1,9 @@
 ﻿using Mature.Socket;
-using Mature.Socket.Common.SuperSocket;
-using Mature.Socket.Common.SuperSocket.Compression;
-using Mature.Socket.Common.SuperSocket.Validation;
+using Mature.Socket.Compression;
+using Mature.Socket.ContentBuilder;
 using Mature.Socket.Server.SuperSocket;
+using Mature.Socket.Validation;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading;
-using System.Threading.Tasks;
 
 namespace SuperSocketServerConsole
 {
@@ -28,8 +23,8 @@ namespace SuperSocketServerConsole
         {
             IContentBuilder contentBuilder = new ContentBuilder(new GZip(), new MD5DataValidation());
             Console.WriteLine($"接收到消息，Key：{arg2.Key} Body:{arg2.Body} MessageId:{arg2.Parameters[0]}");
-            
-            var data = contentBuilder.Builder(arg2.Key, arg2.Body, arg2.Parameters[0]);
+
+            var data = contentBuilder.Builder(arg2.Key, arg2.Body, arg2.MessageId);
             arg1.Send(data, 0, data.Length);
         }
 
