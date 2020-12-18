@@ -2,7 +2,7 @@
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System.Text;
 
-namespace Mature.SuperSocket.Test
+namespace Mature.Socket.Test
 {
     [TestClass]
     public class MD5DataValidationTest

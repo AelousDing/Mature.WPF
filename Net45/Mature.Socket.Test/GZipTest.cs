@@ -3,7 +3,7 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System;
 using System.Text;
 
-namespace Mature.SuperSocket.Test
+namespace Mature.Socket.Test
 {
     [TestClass]
     public class GZipTest

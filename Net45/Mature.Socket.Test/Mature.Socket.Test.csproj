@@ -5,11 +5,11 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{8CA69209-AF33-4268-A3A7-8DF486AD03B7}</ProjectGuid>
+    <ProjectGuid>{4D0F7244-3FAF-44D9-95D2-D9B3826BB807}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>Mature.SuperSocket.Test</RootNamespace>
-    <AssemblyName>Mature.SuperSocket.Test</AssemblyName>
+    <RootNamespace>Mature.Socket.Test</RootNamespace>
+    <AssemblyName>Mature.Socket.Test</AssemblyName>
     <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <ProjectTypeGuids>{3AC096D0-A1C2-E12C-1390-A8335801FDAB};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>

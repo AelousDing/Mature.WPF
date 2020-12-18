@@ -1,24 +1,29 @@
 ﻿using Mature.Socket;
 using Mature.Socket.Compression;
 using Mature.Socket.ContentBuilder;
-using Mature.Socket.Server.SuperSocket;
+using Mature.Socket.DataFormat;
+using Mature.Socket.Server.DotNetty;
 using Mature.Socket.Validation;
 using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
 
-namespace SuperSocketServerConsole
+namespace Server
 {
     class Program
     {
         static void Main(string[] args)
         {
-            ITCPServer server = new TCPServer();
+            ITCPServer server = new TCPServer(new ContentBuilder(new GZip(), new MD5DataValidation()), new JsonDataFormat());
+            //ITCPServer server = new TCPServer();//SuperSocket
             server.Start();
             server.NewSessionConnected += Server_NewSessionConnected;
             server.SessionClosed += Server_SessionClosed;
             server.NewRequestReceived += Server_NewRequestReceived;
             Console.ReadLine();
         }
-
         private static void Server_NewRequestReceived(ISessionWrapper arg1, StringPackageInfo arg2)
         {
             IContentBuilder contentBuilder = new ContentBuilder(new GZip(), new MD5DataValidation());

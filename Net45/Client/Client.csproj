@@ -4,10 +4,10 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{1CED7CF8-AF78-4321-939F-F620F72D000D}</ProjectGuid>
-    <OutputType>Exe</OutputType>
-    <RootNamespace>SuperSocketClientWPF</RootNamespace>
-    <AssemblyName>SuperSocketClientWPF</AssemblyName>
+    <ProjectGuid>{983DBDDB-525F-4627-8325-2FAB8B1729DD}</ProjectGuid>
+    <OutputType>WinExe</OutputType>
+    <RootNamespace>Client</RootNamespace>
+    <AssemblyName>Client</AssemblyName>
     <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <ProjectTypeGuids>{60dc8134-eba5-43b8-bcc9-bb4bc16c2548};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
@@ -32,9 +32,6 @@
     <DefineConstants>TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
-  </PropertyGroup>
-  <PropertyGroup>
-    <StartupObject />
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="System" />
@@ -97,9 +94,9 @@
     <None Include="App.config" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\Mature.Socket.Client.SuperSocket\Mature.Socket.Client.SuperSocket.csproj">
-      <Project>{2d34d4cf-21f5-46cc-8e21-62eb3ecc2262}</Project>
-      <Name>Mature.Socket.Client.SuperSocket</Name>
+    <ProjectReference Include="..\Mature.Socket.Client.DotNetty\Mature.Socket.Client.DotNetty.csproj">
+      <Project>{a91a350c-da0c-4dde-a039-6a925f53bd21}</Project>
+      <Name>Mature.Socket.Client.DotNetty</Name>
     </ProjectReference>
     <ProjectReference Include="..\Mature.Socket\Mature.Socket.csproj">
       <Project>{4f3266c3-78d4-418b-becb-4fdb3d3c1846}</Project>

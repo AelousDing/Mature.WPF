@@ -4,10 +4,10 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{532AAE16-7C8A-45DC-89ED-A2E4F1173EDE}</ProjectGuid>
+    <ProjectGuid>{B803E56E-9D4B-46FA-B384-5CC416927580}</ProjectGuid>
     <OutputType>Exe</OutputType>
-    <RootNamespace>SuperSocketServerConsole</RootNamespace>
-    <AssemblyName>SuperSocketServerConsole</AssemblyName>
+    <RootNamespace>Server</RootNamespace>
+    <AssemblyName>Server</AssemblyName>
     <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <Deterministic>true</Deterministic>
@@ -49,9 +49,9 @@
     <None Include="App.config" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\Mature.Socket.Server.SuperSocket\Mature.Socket.Server.SuperSocket.csproj">
-      <Project>{e02e5ff6-656f-4e27-99df-a9edd63a2a79}</Project>
-      <Name>Mature.Socket.Server.SuperSocket</Name>
+    <ProjectReference Include="..\Mature.Socket.Server.DotNetty\Mature.Socket.Server.DotNetty.csproj">
+      <Project>{0da3551f-b60e-4392-aedc-894907fca33e}</Project>
+      <Name>Mature.Socket.Server.DotNetty</Name>
     </ProjectReference>
     <ProjectReference Include="..\Mature.Socket\Mature.Socket.csproj">
       <Project>{4f3266c3-78d4-418b-becb-4fdb3d3c1846}</Project>
