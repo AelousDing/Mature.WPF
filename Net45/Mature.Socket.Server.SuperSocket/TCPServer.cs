@@ -73,6 +73,10 @@ namespace Mature.Socket.Server.SuperSocket
             {
                 NewRequestReceived(session, requestInfo);
             }
+            else
+            {
+                //命令模式
+            }
         }
         MatureServer server;
         public bool Start()

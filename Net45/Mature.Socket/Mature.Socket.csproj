@@ -46,6 +46,9 @@
     <Compile Include="ISessionWrapper.cs" />
     <Compile Include="ITCPClient.cs" />
     <Compile Include="ITCPServer.cs" />
+    <Compile Include="Notify\INotifyPacket.cs" />
+    <Compile Include="Notify\NotifyContainer.cs" />
+    <Compile Include="Notify\NotifyPacket.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="StringPackageInfo.cs" />
     <Compile Include="SessionInfo.cs" />

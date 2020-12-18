@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Mature.Socket.Client.SuperSocket
+namespace Mature.Socket.Notify
 {
     public class NotifyPacket<T> : INotifyPacket
     {

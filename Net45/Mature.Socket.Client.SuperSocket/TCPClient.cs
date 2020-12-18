@@ -1,5 +1,6 @@
 ﻿using Mature.Socket.Common.SuperSocket;
 using Mature.Socket.Common.SuperSocket.DataFormat;
+using Mature.Socket.Notify;
 using SuperSocket.ClientEngine;
 using System;
 using System.Collections.Concurrent;
@@ -15,7 +16,7 @@ namespace Mature.Socket.Client.SuperSocket
         IContentBuilder contentBuilder;
         IDataFormat dataFormat;
         ConcurrentDictionary<string, TaskCompletionSource<global::SuperSocket.ProtoBase.StringPackageInfo>> task = new System.Collections.Concurrent.ConcurrentDictionary<string, TaskCompletionSource<global::SuperSocket.ProtoBase.StringPackageInfo>>();
-        ConcurrentDictionary<string, List<INotifyPacket>> notify = new ConcurrentDictionary<string, List<INotifyPacket>>();
+
         public TCPClient(IContentBuilder contentBuilder, IDataFormat dataFormat)
         {
             this.contentBuilder = contentBuilder;
@@ -57,13 +58,7 @@ namespace Mature.Socket.Client.SuperSocket
             }
             else
             {
-                if (notify.ContainsKey(e.Package.Key))
-                {
-                    foreach (var item in notify[e.Package.Key])
-                    {
-                        item.Raise(e.Package);
-                    }
-                }
+                NotifyContainer.Instance.Raise(e.Package.Key);
             }
         }
 
@@ -94,7 +89,7 @@ namespace Mature.Socket.Client.SuperSocket
             TaskCompletionSource<global::SuperSocket.ProtoBase.StringPackageInfo> taskCompletionSource = new TaskCompletionSource<global::SuperSocket.ProtoBase.StringPackageInfo>();
             //超时处理
             CancellationTokenSource cts = new CancellationTokenSource();
-            cts.Token.Register(()=> taskCompletionSource.TrySetException(new TimeoutException()));
+            cts.Token.Register(() => taskCompletionSource.TrySetException(new TimeoutException()));
             cts.CancelAfter(timeout);
             string messageId = Guid.NewGuid().ToString().Replace("-", "");
             task.TryAdd(messageId, taskCompletionSource);
@@ -133,37 +128,12 @@ namespace Mature.Socket.Client.SuperSocket
 
         public void RegisterNotify<TResponse>(string key, Action<TResponse> action)
         {
-            if (notify.ContainsKey(key))
-            {
-                notify[key].Add(new NotifyPacket<TResponse>(action));
-            }
-            else
-            {
-                notify.TryAdd(key, new List<INotifyPacket>
-                {
-                    new NotifyPacket<TResponse>(action)
-                });
-            }
+            NotifyContainer.Instance.Register<TResponse>(key, action);
         }
 
         public void UnRegisterNotify<TResponse>(string key, Action<TResponse> action)
         {
-            if (notify.ContainsKey(key))
-            {
-                INotifyPacket notifyPacket = null;
-                foreach (var item in notify[key])
-                {
-                    if (item.Equals(action))
-                    {
-                        notifyPacket = item;
-                        break;
-                    }
-                }
-                if (notifyPacket != null)
-                {
-                    notify[key].Remove(notifyPacket);
-                }
-            }
+            NotifyContainer.Instance.UnRegister<TResponse>(key, action);
         }
     }
 }
