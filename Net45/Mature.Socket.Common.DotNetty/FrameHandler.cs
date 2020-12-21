@@ -34,12 +34,13 @@ namespace Mature.Socket.Common.DotNetty
             string messageId = msg.ReadString(MessageIdCount, Encoding.ASCII);
             IByteBuffer validation = msg.ReadBytes(ValidationIdCount);
             IByteBuffer bodyBuf = msg.ReadBytes(length);
-            byte[] md5 = dataValidation.Validation(bodyBuf.Array);
-            if (!Array.Equals(md5, validation.Array))
+            byte[] md5 = dataValidation.Validation(bodyBuf.GetIoBuffer().ToArray());
+            byte[] validationBuf = validation.GetIoBuffer().ToArray();
+            if (!md5.SequenceEqual(validationBuf))
             {
                 return;//校验不通过，丢弃数据
             }
-            byte[] bodySource = bodyBuf.Array;
+            byte[] bodySource = bodyBuf.GetIoBuffer().ToArray();
             if (isCompressed)//解压缩
             {
                 bodySource = compression.Decompress(bodySource);

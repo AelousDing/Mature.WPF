@@ -14,9 +14,10 @@ namespace Mature.Socket.Server.DotNetty
         {
             base.ChannelActive(context);
         }
+
         protected override void ChannelRead0(IChannelHandlerContext ctx, IByteBuffer msg)
         {
-            
+
         }
     }
 }

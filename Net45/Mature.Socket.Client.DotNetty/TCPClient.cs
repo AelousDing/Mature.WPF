@@ -1,5 +1,6 @@
 ﻿using DotNetty.Codecs;
 using DotNetty.Handlers.Logging;
+using DotNetty.Handlers.Timeout;
 using DotNetty.Transport.Bootstrapping;
 using DotNetty.Transport.Channels;
 using DotNetty.Transport.Channels.Sockets;
@@ -11,6 +12,7 @@ using Mature.Socket.Notify;
 using Mature.Socket.Validation;
 using System;
 using System.Collections.Concurrent;
+using System.Net;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -69,8 +71,10 @@ namespace Mature.Socket.Client.DotNetty
                     pipeline.AddLast(new LengthFieldBasedFrameDecoder(64 * 1024, CmdByteCount + CompressionByteCount, LengthByteCount, MessageIdCount + ValidationIdCount, 0));
                     pipeline.AddLast(handler);
                     pipeline.AddLast(new LengthFieldBasedFrameEncoder(contentBuilder));
+                    pipeline.AddLast(new IdleStateHandler(0, 0, 60));
+                    pipeline.AddLast(new HeartBeatClientHandler());
                 }));
-            channel = await bootstrap.ConnectAsync(ip, port);
+            channel = await bootstrap.ConnectAsync(new IPEndPoint(IPAddress.Parse(ip), port));
             bool isConnected = (channel != null);
             if (isConnected)
             {
