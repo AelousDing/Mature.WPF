@@ -81,7 +81,10 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="ChannelManagerHandler.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="ServerConfig.cs" />
+    <Compile Include="SessionWrapper.cs" />
     <Compile Include="TCPServer.cs" />
   </ItemGroup>
   <ItemGroup>

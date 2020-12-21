@@ -1,6 +1,8 @@
-﻿using Mature.Socket.ContentBuilder;
+﻿using Mature.Socket.Compression;
+using Mature.Socket.ContentBuilder;
 using Mature.Socket.DataFormat;
 using Mature.Socket.Notify;
+using Mature.Socket.Validation;
 using SuperSocket.ClientEngine;
 using System;
 using System.Collections.Concurrent;
@@ -14,12 +16,16 @@ namespace Mature.Socket.Client.SuperSocket
     {
         IContentBuilder contentBuilder;
         IDataFormat dataFormat;
+        IDataValidation dataValidation;
+        ICompression compression;
         ConcurrentDictionary<string, TaskCompletionSource<global::SuperSocket.ProtoBase.StringPackageInfo>> task = new System.Collections.Concurrent.ConcurrentDictionary<string, TaskCompletionSource<global::SuperSocket.ProtoBase.StringPackageInfo>>();
 
-        public TCPClient(IContentBuilder contentBuilder, IDataFormat dataFormat)
+        public TCPClient(IContentBuilder contentBuilder, IDataFormat dataFormat, IDataValidation dataValidation, ICompression compression)
         {
             this.contentBuilder = contentBuilder;
             this.dataFormat = dataFormat;
+            this.dataValidation = dataValidation;
+            this.compression = compression;
             easyClient = new EasyClient<global::SuperSocket.ProtoBase.StringPackageInfo>();
             easyClient.KeepAliveTime = 60;//单位：秒
             easyClient.KeepAliveInterval = 5;//单位：秒

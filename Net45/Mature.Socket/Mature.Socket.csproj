@@ -47,6 +47,7 @@
     <Compile Include="Command\ICommand.cs" />
     <Compile Include="Compression\GZip.cs" />
     <Compile Include="Compression\ICompression.cs" />
+    <Compile Include="Config\IServerConfig.cs" />
     <Compile Include="ContentBuilder\ContentBuilder.cs" />
     <Compile Include="DataFormat\IDataFormat.cs" />
     <Compile Include="DataFormat\JsonDataFormat.cs" />

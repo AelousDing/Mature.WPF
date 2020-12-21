@@ -4,9 +4,11 @@ using DotNetty.Transport.Bootstrapping;
 using DotNetty.Transport.Channels;
 using DotNetty.Transport.Channels.Sockets;
 using Mature.Socket.Common.DotNetty;
+using Mature.Socket.Compression;
 using Mature.Socket.ContentBuilder;
 using Mature.Socket.DataFormat;
 using Mature.Socket.Notify;
+using Mature.Socket.Validation;
 using System;
 using System.Collections.Concurrent;
 using System.Threading;
@@ -27,11 +29,15 @@ namespace Mature.Socket.Client.DotNetty
 
         IContentBuilder contentBuilder;
         IDataFormat dataFormat;
+        IDataValidation dataValidation;
+        ICompression compression;
         ConcurrentDictionary<string, TaskCompletionSource<StringPackageInfo>> task = new ConcurrentDictionary<string, TaskCompletionSource<StringPackageInfo>>();
-        public TCPClient(IContentBuilder contentBuilder, IDataFormat dataFormat)
+        public TCPClient(IContentBuilder contentBuilder, IDataFormat dataFormat, IDataValidation dataValidation, ICompression compression)
         {
             this.contentBuilder = contentBuilder;
             this.dataFormat = dataFormat;
+            this.dataValidation = dataValidation;
+            this.compression = compression;
         }
         public void Close()
         {
@@ -49,6 +55,8 @@ namespace Mature.Socket.Client.DotNetty
         MultithreadEventLoopGroup group;
         public async Task<bool> ConnectAsync(string ip, ushort port)
         {
+            var handler = new FrameHandler(dataValidation, compression);
+            handler.Handler += Handler_Handler;
             group = new MultithreadEventLoopGroup();
             var bootstrap = new Bootstrap();
             bootstrap.Group(group)
@@ -59,6 +67,7 @@ namespace Mature.Socket.Client.DotNetty
                     IChannelPipeline pipeline = chaneel.Pipeline;
                     pipeline.AddLast(new LoggingHandler());
                     pipeline.AddLast(new LengthFieldBasedFrameDecoder(64 * 1024, CmdByteCount + CompressionByteCount, LengthByteCount, MessageIdCount + ValidationIdCount, 0));
+                    pipeline.AddLast(handler);
                     pipeline.AddLast(new LengthFieldBasedFrameEncoder(contentBuilder));
                 }));
             channel = await bootstrap.ConnectAsync(ip, port);
@@ -68,6 +77,19 @@ namespace Mature.Socket.Client.DotNetty
                 Connected?.Invoke(this, null);
             }
             return isConnected;
+        }
+        private void Handler_Handler(IChannel channel, StringPackageInfo e)
+        {
+            Console.WriteLine($"Key:{e.Key}  Body:{e.Body}");
+
+            if (task.TryGetValue(e.MessageId, out TaskCompletionSource<StringPackageInfo> tcs))
+            {
+                tcs.TrySetResult(e);
+            }
+            else
+            {
+                NotifyContainer.Instance.Raise(e.Key);
+            }
         }
 
         public void RegisterNotify<TResponse>(string key, Action<TResponse> action)
@@ -118,9 +140,10 @@ namespace Mature.Socket.Client.DotNetty
             return result?.Body;
         }
 
-        public Task<TResponse> SendAsync<TRequest, TResponse>(string key, TRequest request, int timeout)
+        public async Task<TResponse> SendAsync<TRequest, TResponse>(string key, TRequest request, int timeout)
         {
-            throw new NotImplementedException();
+            string body = await SendAsync(key, dataFormat.Serialize<TRequest>(request), timeout);
+            return dataFormat.Deserialize<TResponse>(body);
         }
 
         public void UnRegisterNotify<TResponse>(string key, Action<TResponse> action)

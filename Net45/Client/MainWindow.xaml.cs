@@ -33,7 +33,7 @@ namespace Client
         ITCPClient client;
         private async void btnConnect_Click(object sender, RoutedEventArgs e)
         {
-            client = new TCPClient(new ContentBuilder(new GZip(), new MD5DataValidation()), new JsonDataFormat());
+            client = new TCPClient(new ContentBuilder(new GZip(), new MD5DataValidation()), new JsonDataFormat(), new MD5DataValidation(), new GZip());
             bool isConnected = await client.ConnectAsync(tbIp.Text, ushort.Parse(tbPort.Text));
             Console.WriteLine(isConnected ? "连接成功" : "连接失败");
         }

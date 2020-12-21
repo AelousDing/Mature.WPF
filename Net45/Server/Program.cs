@@ -16,9 +16,12 @@ namespace Server
     {
         static void Main(string[] args)
         {
-            ITCPServer server = new TCPServer(new ContentBuilder(new GZip(), new MD5DataValidation()), new JsonDataFormat());
+            ITCPServer server = new TCPServer(new ContentBuilder(new GZip(), new MD5DataValidation()), new JsonDataFormat(), new MD5DataValidation(), new GZip());
             //ITCPServer server = new TCPServer();//SuperSocket
-            server.Start();
+            server.Start(new ServerConfig
+            {
+                Port = 2020
+            });
             server.NewSessionConnected += Server_NewSessionConnected;
             server.SessionClosed += Server_SessionClosed;
             server.NewRequestReceived += Server_NewRequestReceived;

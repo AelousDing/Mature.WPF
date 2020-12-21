@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Mature.Socket.Config;
+using System;
 using System.Collections.Generic;
 
 namespace Mature.Socket
@@ -7,7 +8,7 @@ namespace Mature.Socket
     {
         IEnumerable<SessionInfo> GetAllSession();
         SessionInfo GetSessionByID(string sessionID);
-        bool Start();
+        bool Start(IServerConfig serverConfig);
         void Stop();
         event EventHandler<SessionInfo> NewSessionConnected;
         event Action<ISessionWrapper, StringPackageInfo> NewRequestReceived;

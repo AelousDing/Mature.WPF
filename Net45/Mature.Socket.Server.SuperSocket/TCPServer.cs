@@ -71,12 +71,12 @@ namespace Mature.Socket.Server.SuperSocket
             }
         }
         MatureServer server;
-        public bool Start()
+        public bool Start(Mature.Socket.Config.IServerConfig config)
         {
             server = new MatureServer();
-            var serverConfig = new ServerConfig
+            var serverConfig = new global::SuperSocket.SocketBase.Config.ServerConfig
             {
-                Port = 2020,
+                Port = config.Port,
                 KeepAliveInterval = 5,
                 KeepAliveTime = 60
             };
