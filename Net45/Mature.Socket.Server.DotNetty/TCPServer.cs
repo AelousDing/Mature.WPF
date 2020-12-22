@@ -1,5 +1,6 @@
 ﻿using DotNetty.Codecs;
 using DotNetty.Handlers.Logging;
+using DotNetty.Handlers.Timeout;
 using DotNetty.Transport.Bootstrapping;
 using DotNetty.Transport.Channels;
 using DotNetty.Transport.Channels.Sockets;
@@ -66,6 +67,8 @@ namespace Mature.Socket.Server.DotNetty
                 {
                     IChannelPipeline pipeline = channel.Pipeline;
                     pipeline.AddLast(new LoggingHandler("SRV-CONN"));
+                    pipeline.AddLast(new IdleStateHandler(60, 0, 0));
+                    pipeline.AddLast(new HeatBeatHandler());
                     pipeline.AddLast(new ChannelManagerHandler());
                     pipeline.AddLast(new LengthFieldBasedFrameDecoder(64 * 1024, CmdByteCount + CompressionByteCount, LengthByteCount, MessageIdCount + ValidationIdCount, 0));
                     pipeline.AddLast(handler);
