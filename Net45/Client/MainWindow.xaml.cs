@@ -37,7 +37,7 @@ namespace Client
         {
             try
             {
-                var result = await client.SendAsync(TestCmd, tbSend.Text, 30000);
+                var result = await client.SendAsync(TestCmd, tbSend.Text, 300000);
                 tbReceive.Text += result;
             }
             catch (Exception ex)

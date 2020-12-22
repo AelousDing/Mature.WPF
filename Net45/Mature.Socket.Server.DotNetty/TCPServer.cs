@@ -66,10 +66,10 @@ namespace Mature.Socket.Server.DotNetty
                 {
                     IChannelPipeline pipeline = channel.Pipeline;
                     pipeline.AddLast(new LoggingHandler("SRV-CONN"));
-                    //pipeline.AddLast(new ChannelManagerHandler());
+                    pipeline.AddLast(new ChannelManagerHandler());
                     pipeline.AddLast(new LengthFieldBasedFrameDecoder(64 * 1024, CmdByteCount + CompressionByteCount, LengthByteCount, MessageIdCount + ValidationIdCount, 0));
                     pipeline.AddLast(handler);
-                    pipeline.AddLast(new LengthFieldBasedFrameEncoder(contentBuilder));
+                    pipeline.AddLast(new ByteArrayEncoder());
                 }));
 
             boundChannel = bootstrap.BindAsync(serverConfig.Port).Result;

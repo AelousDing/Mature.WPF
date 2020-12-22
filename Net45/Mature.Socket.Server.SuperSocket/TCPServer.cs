@@ -125,7 +125,7 @@ namespace Mature.Socket.Server.SuperSocket
         {
             OnNewRequestReceived(new SessionWrapper(session), new StringPackageInfo
             {
-                Key = requestInfo.Key,
+                Key = requestInfo.Key?.Trim(),
                 Body = requestInfo.Body,
                 MessageId = requestInfo.Parameters[0]
             });

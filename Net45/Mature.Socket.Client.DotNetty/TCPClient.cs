@@ -67,12 +67,12 @@ namespace Mature.Socket.Client.DotNetty
                 .Handler(new ActionChannelInitializer<ISocketChannel>(chaneel =>
                 {
                     IChannelPipeline pipeline = chaneel.Pipeline;
-                    pipeline.AddLast(new LoggingHandler());
+                    //pipeline.AddLast(new LoggingHandler());
                     pipeline.AddLast(new LengthFieldBasedFrameDecoder(64 * 1024, CmdByteCount + CompressionByteCount, LengthByteCount, MessageIdCount + ValidationIdCount, 0));
                     pipeline.AddLast(handler);
-                    pipeline.AddLast(new LengthFieldBasedFrameEncoder(contentBuilder));
-                    pipeline.AddLast(new IdleStateHandler(0, 0, 60));
-                    pipeline.AddLast(new HeartBeatClientHandler());
+                    pipeline.AddLast(new ByteArrayEncoder());
+                    //pipeline.AddLast(new IdleStateHandler(0, 0, 60));
+                    //pipeline.AddLast(new HeartBeatClientHandler());
                 }));
             channel = await bootstrap.ConnectAsync(new IPEndPoint(IPAddress.Parse(ip), port));
             bool isConnected = (channel != null);
@@ -122,13 +122,7 @@ namespace Mature.Socket.Client.DotNetty
             try
             {
                 Console.WriteLine($"发送消息，消息ID：{messageId} 消息命令标识：{key} 消息内容：{body}");
-                await channel.WriteAndFlushAsync(new StringPackageInfo()
-                {
-                    Key = key,
-                    Body = body,
-                    MessageId = messageId,
-                    IsCompressed = false
-                });
+                await channel.WriteAndFlushAsync(contentBuilder?.Builder(key, body, messageId, false));
                 result = await taskCompletionSource.Task;
             }
             catch (Exception ex)

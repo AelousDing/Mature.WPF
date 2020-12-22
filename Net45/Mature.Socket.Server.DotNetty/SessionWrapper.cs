@@ -16,7 +16,7 @@ namespace Mature.Socket.Server.DotNetty
         }
         public void Send(byte[] data, int offset, int length)
         {
-            channel.WriteAndFlushAsync(data);
+            channel?.WriteAndFlushAsync(data);
         }
     }
 }

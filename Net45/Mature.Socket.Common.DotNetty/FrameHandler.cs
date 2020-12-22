@@ -21,6 +21,7 @@ namespace Mature.Socket.Common.DotNetty
         IDataValidation dataValidation;
         public event Action<IChannel, StringPackageInfo> Handler;
         ICompression compression;
+        public override bool IsSharable => true;
         public FrameHandler(IDataValidation dataValidation, ICompression compression)
         {
             this.dataValidation = dataValidation;
