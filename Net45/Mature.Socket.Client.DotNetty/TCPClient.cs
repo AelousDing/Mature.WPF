@@ -72,7 +72,7 @@ namespace Mature.Socket.Client.DotNetty
                     pipeline.AddLast(new LengthFieldBasedFrameDecoder(64 * 1024, CmdByteCount + CompressionByteCount, LengthByteCount, MessageIdCount + ValidationIdCount, 0));
                     pipeline.AddLast(handler);
                     pipeline.AddLast(new ByteArrayEncoder());
-                    pipeline.AddLast(new HeartBeatHandler());
+                    pipeline.AddLast(new HeartBeatHandler(contentBuilder));
                 }));
             channel = await bootstrap.ConnectAsync(new IPEndPoint(IPAddress.Parse(ip), port));
             bool isConnected = (channel != null);
