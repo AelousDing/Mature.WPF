@@ -14,6 +14,7 @@ namespace Mature.Socket.Server.DotNetty
         protected override void ChannelRead0(IChannelHandlerContext ctx, IByteBuffer msg)
         {
             Console.WriteLine("接收到心跳信号");
+            ctx.FireChannelRead(msg);
         }
         public override void ExceptionCaught(IChannelHandlerContext context, Exception exception)
         {

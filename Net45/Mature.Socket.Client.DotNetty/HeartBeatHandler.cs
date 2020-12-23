@@ -21,11 +21,6 @@ namespace Mature.Socket.Client.DotNetty
             base.ChannelInactive(context);
             Console.WriteLine("ChannelInactive");
         }
-        public override void ChannelRead(IChannelHandlerContext context, object message)
-        {
-            base.ChannelRead(context, message);
-            Console.WriteLine("ChannelRead");
-        }
         public override void UserEventTriggered(IChannelHandlerContext context, object evt)
         {
             if (evt is IdleStateEvent state)
