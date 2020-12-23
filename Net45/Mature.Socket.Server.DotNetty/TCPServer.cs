@@ -13,6 +13,7 @@ using Mature.Socket.Validation;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -39,15 +40,32 @@ namespace Mature.Socket.Server.DotNetty
             this.dataFormat = dataFormat;
             this.dataValidation = dataValidation;
             this.compression = compression;
+            DotNettyChannelManager.Instance.NewSessionConnected += (s, e) => NewSessionConnected?.Invoke(this, e);
+            DotNettyChannelManager.Instance.SessionClosed += (s, e) => SessionClosed?.Invoke(this, e);
         }
         public IEnumerable<SessionInfo> GetAllSession()
         {
-            throw new NotImplementedException();
+            return DotNettyChannelManager.Instance.Channels?.Select(p => new SessionInfo
+            {
+                SessionID = p.Value.Id.AsLongText(),
+                LastActiveTime = DateTime.Now,
+                LocalEndPoint = (IPEndPoint)p.Value.LocalAddress,
+                RemoteEndPoint = (IPEndPoint)p.Value.RemoteAddress,
+                StartTime = DateTime.Now
+            });
         }
 
         public SessionInfo GetSessionByID(string sessionID)
         {
-            throw new NotImplementedException();
+            var channel = DotNettyChannelManager.Instance.Channels?.FirstOrDefault(p => p.Value.Id.AsLongText() == sessionID).Value;
+            return channel == null ? null : new SessionInfo
+            {
+                SessionID = channel.Id.AsLongText(),
+                LastActiveTime = DateTime.Now,
+                LocalEndPoint = (IPEndPoint)channel.LocalAddress,
+                RemoteEndPoint = (IPEndPoint)channel.RemoteAddress,
+                StartTime = DateTime.Now
+            };
         }
         IEventLoopGroup bossGroup = new MultithreadEventLoopGroup();
         IEventLoopGroup workerGroup = new MultithreadEventLoopGroup();
@@ -69,13 +87,14 @@ namespace Mature.Socket.Server.DotNetty
                     pipeline.AddLast(new LoggingHandler("SRV-CONN"));
                     pipeline.AddLast(new IdleStateHandler(70, 0, 0));
                     pipeline.AddLast(new ChannelManagerHandler());
+                    pipeline.AddLast(new HeatBeatHandler());
                     pipeline.AddLast(new LengthFieldBasedFrameDecoder(64 * 1024, CmdByteCount + CompressionByteCount, LengthByteCount, MessageIdCount + ValidationIdCount, 0));
                     pipeline.AddLast(handler);
                     pipeline.AddLast(new ByteArrayEncoder());
-                    pipeline.AddLast(new HeatBeatHandler());
                 }));
 
             boundChannel = bootstrap.BindAsync(serverConfig.Port).Result;
+            Console.WriteLine(boundChannel != null ? "Start successfully" : "Failed to start");
             return boundChannel != null;
         }
 

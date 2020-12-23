@@ -24,7 +24,7 @@ namespace Mature.Socket.Server.DotNetty
             {
                 if (state.State == IdleState.ReaderIdle)
                 {
-                    Console.WriteLine(" 没有收到客户端的信号 连接断开");
+                    context.Channel.CloseAsync();
                 }
             }
             else

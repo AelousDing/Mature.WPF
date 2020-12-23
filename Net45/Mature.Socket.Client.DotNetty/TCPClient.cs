@@ -55,6 +55,9 @@ namespace Mature.Socket.Client.DotNetty
         }
         IChannel channel;
         MultithreadEventLoopGroup group;
+
+        public bool IsConnected => channel == null ? false : channel.Active;
+
         public async Task<bool> ConnectAsync(string ip, ushort port)
         {
             var handler = new FrameHandler(dataValidation, compression);

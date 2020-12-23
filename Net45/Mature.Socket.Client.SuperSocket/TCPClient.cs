@@ -69,6 +69,8 @@ namespace Mature.Socket.Client.SuperSocket
 
         EasyClient<global::SuperSocket.ProtoBase.StringPackageInfo> easyClient;
 
+        public bool IsConnected => easyClient == null ? false : easyClient.Socket.Connected;
+
         public event EventHandler Connected;
         public event EventHandler Closed;
 

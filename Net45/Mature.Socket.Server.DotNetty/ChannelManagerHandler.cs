@@ -14,7 +14,13 @@ namespace Mature.Socket.Server.DotNetty
         public override void ChannelActive(IChannelHandlerContext context)
         {
             base.ChannelActive(context);
-            Console.WriteLine($"新连接建立：{context.Channel.Id.AsShortText()}");
+            DotNettyChannelManager.Instance.Add(context.Channel.Id.AsLongText(), context.Channel);
+
+        }
+        public override void ChannelInactive(IChannelHandlerContext context)
+        {
+            base.ChannelInactive(context);
+            DotNettyChannelManager.Instance.Remove(context.Channel.Id.AsLongText());
         }
     }
 }
