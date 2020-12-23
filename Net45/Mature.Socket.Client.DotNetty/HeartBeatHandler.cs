@@ -1,6 +1,7 @@
 ﻿using DotNetty.Buffers;
 using DotNetty.Handlers.Timeout;
 using DotNetty.Transport.Channels;
+using Mature.Socket.ContentBuilder;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -11,6 +12,11 @@ namespace Mature.Socket.Client.DotNetty
 {
     public class HeartBeatHandler : ChannelHandlerAdapter
     {
+        IContentBuilder contentBuilder;
+        public HeartBeatHandler(IContentBuilder contentBuilder)
+        {
+            this.contentBuilder = contentBuilder;
+        }
         public override bool IsSharable => true;
         public override void ChannelActive(IChannelHandlerContext context)
         {
@@ -28,7 +34,7 @@ namespace Mature.Socket.Client.DotNetty
             {
                 if (state.State == IdleState.WriterIdle)
                 {
-                    context.WriteAndFlushAsync(context.Allocator.DirectBuffer().WriteString("", Encoding.UTF8));
+                    context.WriteAndFlushAsync(contentBuilder.Builder("PING", "", Guid.NewGuid().ToString().Replace("-", "")));
                 }
             }
             else

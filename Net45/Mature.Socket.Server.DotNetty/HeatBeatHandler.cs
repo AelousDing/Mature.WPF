@@ -11,6 +11,7 @@ namespace Mature.Socket.Server.DotNetty
 {
     public class HeatBeatHandler : ChannelHandlerAdapter
     {
+        public override bool IsSharable => true;
         public override void ExceptionCaught(IChannelHandlerContext context, Exception exception)
         {
             base.ExceptionCaught(context, exception);
