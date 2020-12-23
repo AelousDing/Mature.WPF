@@ -8,18 +8,13 @@ using System.Threading.Tasks;
 
 namespace Mature.Socket.Server.DotNetty
 {
-    public class ChannelManagerHandler : SimpleChannelInboundHandler<IByteBuffer>
+    public class ChannelManagerHandler : ChannelHandlerAdapter
     {
         public override bool IsSharable => true;
         public override void ChannelActive(IChannelHandlerContext context)
         {
             base.ChannelActive(context);
             Console.WriteLine($"新连接建立：{context.Channel.Id.AsShortText()}");
-        }
-
-        protected override void ChannelRead0(IChannelHandlerContext ctx, IByteBuffer msg)
-        {
-            ctx.FireChannelRead(msg);
         }
     }
 }

@@ -9,8 +9,9 @@ using System.Threading.Tasks;
 
 namespace Mature.Socket.Client.DotNetty
 {
-    public class HeartBeatHandler : SimpleChannelInboundHandler<IByteBuffer>
+    public class HeartBeatHandler : ChannelHandlerAdapter
     {
+        public override bool IsSharable => true;
         public override void ChannelActive(IChannelHandlerContext context)
         {
             base.ChannelActive(context);
@@ -34,11 +35,6 @@ namespace Mature.Socket.Client.DotNetty
             {
                 base.UserEventTriggered(context, evt);
             }
-        }
-
-        protected override void ChannelRead0(IChannelHandlerContext ctx, IByteBuffer msg)
-        {
-            ctx.FireChannelRead(msg);
         }
     }
 }

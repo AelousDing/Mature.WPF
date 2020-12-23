@@ -9,13 +9,8 @@ using System.Threading.Tasks;
 
 namespace Mature.Socket.Server.DotNetty
 {
-    public class HeatBeatHandler : SimpleChannelInboundHandler<IByteBuffer>
+    public class HeatBeatHandler : ChannelHandlerAdapter
     {
-        protected override void ChannelRead0(IChannelHandlerContext ctx, IByteBuffer msg)
-        {
-            Console.WriteLine("接收到心跳信号");
-            ctx.FireChannelRead(msg);
-        }
         public override void ExceptionCaught(IChannelHandlerContext context, Exception exception)
         {
             base.ExceptionCaught(context, exception);
