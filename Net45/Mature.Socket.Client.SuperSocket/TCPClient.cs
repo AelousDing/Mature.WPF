@@ -71,13 +71,18 @@ namespace Mature.Socket.Client.SuperSocket
 
         public bool IsConnected => easyClient == null ? false : easyClient.Socket.Connected;
 
+        public string SessionId => sessionId;
+        public EndPoint RemoteEndPoint => endPoint;
+
         public event EventHandler Connected;
         public event EventHandler Closed;
-
+        EndPoint endPoint;
+        string sessionId;
         public async Task<bool> ConnectAsync(string ip, ushort port)
         {
-            EndPoint endPoint = new IPEndPoint(IPAddress.Parse(ip), port);
+            endPoint = new IPEndPoint(IPAddress.Parse(ip), port);
             var isConnect = await easyClient.ConnectAsync(endPoint);
+            sessionId = Guid.NewGuid().ToString();
             return isConnect;
         }
 

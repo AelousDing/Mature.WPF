@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Net;
 using System.Threading.Tasks;
 
 namespace Mature.Socket
@@ -6,6 +7,8 @@ namespace Mature.Socket
     public interface ITCPClient
     {
         bool IsConnected { get; }
+        string SessionId { get; }
+        EndPoint RemoteEndPoint { get; }
         Task<bool> ConnectAsync(string ip, ushort port);
         Task<string> SendAsync(string key, string body, int timeout);
         Task<TResponse> SendAsync<TRequest, TResponse>(string key, TRequest request, int timeout);

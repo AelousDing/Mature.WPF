@@ -58,6 +58,10 @@ namespace Mature.Socket.Client.DotNetty
 
         public bool IsConnected => channel == null ? false : channel.Active;
 
+        public string SessionId => channel.Id.AsLongText();
+
+        public EndPoint RemoteEndPoint { get => channel.RemoteAddress; }
+
         public async Task<bool> ConnectAsync(string ip, ushort port)
         {
             var handler = new FrameHandler(dataValidation, compression);

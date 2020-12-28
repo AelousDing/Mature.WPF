@@ -14,6 +14,9 @@ namespace Mature.Socket.Server.DotNetty
         {
             this.channel = channel;
         }
+
+        public string SessionId => channel.Id.AsLongText();
+
         public void Send(byte[] data, int offset, int length)
         {
             channel?.WriteAndFlushAsync(data);
