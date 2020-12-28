@@ -12,7 +12,7 @@ namespace Server
     {
         static void Main(string[] args)
         {
-            ITCPServer server = new TCPServer(new ContentBuilder(new GZip(), new MD5DataValidation()), new JsonDataFormat(), new MD5DataValidation(), new GZip());
+            ITCPServer server = new TCPServer(new MD5DataValidation(), new GZip());
             //ITCPServer server = new TCPServer();//SuperSocket
             server.Start(new ServerConfig
             {

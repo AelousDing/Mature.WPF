@@ -30,14 +30,10 @@ namespace Mature.Socket.Server.DotNetty
         public event EventHandler<SessionInfo> NewSessionConnected;
         public event Action<ISessionWrapper, StringPackageInfo> NewRequestReceived;
         public event EventHandler<SessionInfo> SessionClosed;
-        IContentBuilder contentBuilder;
-        IDataFormat dataFormat;
         IDataValidation dataValidation;
         ICompression compression;
-        public TCPServer(IContentBuilder contentBuilder, IDataFormat dataFormat, IDataValidation dataValidation, ICompression compression)
+        public TCPServer(IDataValidation dataValidation, ICompression compression)
         {
-            this.contentBuilder = contentBuilder;
-            this.dataFormat = dataFormat;
             this.dataValidation = dataValidation;
             this.compression = compression;
             DotNettyChannelManager.Instance.NewSessionConnected += (s, e) => NewSessionConnected?.Invoke(this, e);
