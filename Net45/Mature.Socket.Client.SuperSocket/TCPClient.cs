@@ -20,9 +20,9 @@ namespace Mature.Socket.Client.SuperSocket
         ICompression compression;
         ConcurrentDictionary<string, TaskCompletionSource<global::SuperSocket.ProtoBase.StringPackageInfo>> task = new System.Collections.Concurrent.ConcurrentDictionary<string, TaskCompletionSource<global::SuperSocket.ProtoBase.StringPackageInfo>>();
 
-        public TCPClient(IContentBuilder contentBuilder, IDataFormat dataFormat, IDataValidation dataValidation, ICompression compression)
+        public TCPClient(IDataFormat dataFormat, IDataValidation dataValidation, ICompression compression)
         {
-            this.contentBuilder = contentBuilder;
+            this.contentBuilder = new ContentBuilder.ContentBuilder(compression, dataValidation, dataFormat);
             this.dataFormat = dataFormat;
             this.dataValidation = dataValidation;
             this.compression = compression;
@@ -85,9 +85,10 @@ namespace Mature.Socket.Client.SuperSocket
             sessionId = Guid.NewGuid().ToString();
             return isConnect;
         }
-
-        public async Task<string> SendAsync(string key, string body, int timeout)
+        public async Task<TResponse> SendAsync<TRequest, TResponse>(string key, TRequest request, int timeout)
         {
+            string body = dataFormat.Serialize<TRequest>(request);
+
             if (string.IsNullOrEmpty(key) || key.Length >= 20)
             {
                 throw new Exception("The key length is no more than 20.");
@@ -120,12 +121,7 @@ namespace Mature.Socket.Client.SuperSocket
                 cts.Dispose();
                 task.TryRemove(messageId, out TaskCompletionSource<global::SuperSocket.ProtoBase.StringPackageInfo> tcs);
             }
-            return result?.Body;
-        }
-        public async Task<TResponse> SendAsync<TRequest, TResponse>(string key, TRequest request, int timeout)
-        {
-            string body = await SendAsync(key, dataFormat.Serialize<TRequest>(request), timeout);
-            return dataFormat.Deserialize<TResponse>(body);
+            return dataFormat.Deserialize<TResponse>(result?.Body);
         }
 
         public void Close()

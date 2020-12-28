@@ -1,4 +1,5 @@
 ﻿using Mature.Socket.Compression;
+using Mature.Socket.DataFormat;
 using Mature.Socket.Validation;
 using System;
 using System.Collections.Generic;
@@ -15,11 +16,13 @@ namespace Mature.Socket.ContentBuilder
     {
         ICompression compression;
         IDataValidation dataValidation;
+        IDataFormat dataFormat;
         public Encoding Encoding { get; set; } = Encoding.UTF8;
-        public ContentBuilder(ICompression compression, IDataValidation dataValidation)
+        public ContentBuilder(ICompression compression, IDataValidation dataValidation, IDataFormat dataFormat)
         {
             this.compression = compression;
             this.dataValidation = dataValidation;
+            this.dataFormat = dataFormat;
         }
         public byte[] Builder(string key, string body, string messageId)
         {
@@ -42,6 +45,10 @@ namespace Mature.Socket.ContentBuilder
             data.AddRange(validation);
             data.AddRange(bodyBuffer);
             return data.ToArray();
+        }
+        public byte[] Builder<TBody>(string key, TBody body, string messageId, bool isCompress)
+        {
+            return Builder(key, dataFormat.Serialize<TBody>(body), messageId, isCompress);
         }
     }
 }

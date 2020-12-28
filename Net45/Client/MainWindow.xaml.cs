@@ -23,7 +23,7 @@ namespace Client
         {
             try
             {
-                client = new TCPClient(new ContentBuilder(new GZip(), new MD5DataValidation()), new JsonDataFormat(), new MD5DataValidation(), new GZip());
+                client = new TCPClient(new JsonDataFormat(), new MD5DataValidation(), new GZip());
                 bool isConnected = await client.ConnectAsync(tbIp.Text, ushort.Parse(tbPort.Text));
                 Console.WriteLine(isConnected ? "连接成功" : "连接失败");
             }
@@ -37,7 +37,7 @@ namespace Client
         {
             try
             {
-                var result = await client.SendAsync(TestCmd, tbSend.Text, 300000);
+                var result = await client.SendAsync<string, string>(TestCmd, tbSend.Text, 300000);
                 tbReceive.Text += result;
             }
             catch (Exception ex)

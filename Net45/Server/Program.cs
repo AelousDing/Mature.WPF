@@ -25,7 +25,7 @@ namespace Server
         }
         private static void Server_NewRequestReceived(ISessionWrapper arg1, StringPackageInfo arg2)
         {
-            IContentBuilder contentBuilder = new ContentBuilder(new GZip(), new MD5DataValidation());
+            IContentBuilder contentBuilder = new ContentBuilder(new GZip(), new MD5DataValidation(),new JsonDataFormat());
             Console.WriteLine($"接收到消息，Key：{arg2.Key} Body:{arg2.Body} MessageId:{arg2.MessageId}");
             if (arg2.Key?.Length < 20)
             {
