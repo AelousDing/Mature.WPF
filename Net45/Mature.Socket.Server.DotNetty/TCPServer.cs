@@ -43,29 +43,15 @@ namespace Mature.Socket.Server.DotNetty
             DotNettyChannelManager.Instance.NewSessionConnected += (s, e) => NewSessionConnected?.Invoke(this, e);
             DotNettyChannelManager.Instance.SessionClosed += (s, e) => SessionClosed?.Invoke(this, e);
         }
-        public IEnumerable<SessionInfo> GetAllSession()
+        public IEnumerable<ISessionWrapper> GetAllSession()
         {
-            return DotNettyChannelManager.Instance.Channels?.Select(p => new SessionInfo
-            {
-                SessionID = p.Value.Id.AsLongText(),
-                LastActiveTime = DateTime.Now,
-                LocalEndPoint = (IPEndPoint)p.Value.LocalAddress,
-                RemoteEndPoint = (IPEndPoint)p.Value.RemoteAddress,
-                StartTime = DateTime.Now
-            });
+            return DotNettyChannelManager.Instance.Channels?.Select(p => new SessionWrapper(p.Value));
         }
 
-        public SessionInfo GetSessionByID(string sessionID)
+        public ISessionWrapper GetSessionByID(string sessionID)
         {
             var channel = DotNettyChannelManager.Instance.Channels?.FirstOrDefault(p => p.Value.Id.AsLongText() == sessionID).Value;
-            return channel == null ? null : new SessionInfo
-            {
-                SessionID = channel.Id.AsLongText(),
-                LastActiveTime = DateTime.Now,
-                LocalEndPoint = (IPEndPoint)channel.LocalAddress,
-                RemoteEndPoint = (IPEndPoint)channel.RemoteAddress,
-                StartTime = DateTime.Now
-            };
+            return channel == null ? null : new SessionWrapper(channel);
         }
         IEventLoopGroup bossGroup = new MultithreadEventLoopGroup();
         IEventLoopGroup workerGroup = new MultithreadEventLoopGroup();

@@ -9,36 +9,22 @@ namespace Mature.Socket.Server.SuperSocket
 {
     public class TCPServer : ITCPServer
     {
-        public IEnumerable<SessionInfo> GetAllSession()
+        public IEnumerable<ISessionWrapper> GetAllSession()
         {
             var sessions = server?.GetAllSessions();
             if (sessions != null && sessions.Count() > 0)
             {
                 foreach (var item in sessions)
                 {
-                    yield return new SessionInfo()
-                    {
-                        SessionID = item.SessionID,
-                        LastActiveTime = item.LastActiveTime,
-                        StartTime = item.StartTime,
-                        LocalEndPoint = item.LocalEndPoint,
-                        RemoteEndPoint = item.RemoteEndPoint
-                    };
+                    yield return new SessionWrapper(item);
                 }
             }
         }
 
-        public SessionInfo GetSessionByID(string sessionID)
+        public ISessionWrapper GetSessionByID(string sessionID)
         {
             var session = server?.GetAllSessions()?.FirstOrDefault(p => p.SessionID == sessionID);
-            return session == null ? null : new SessionInfo()
-            {
-                SessionID = session.SessionID,
-                LastActiveTime = session.LastActiveTime,
-                StartTime = session.StartTime,
-                LocalEndPoint = session.LocalEndPoint,
-                RemoteEndPoint = session.RemoteEndPoint
-            };
+            return session == null ? null : new SessionWrapper(session);
         }
 
         public event EventHandler<SessionInfo> NewSessionConnected;

@@ -6,8 +6,8 @@ namespace Mature.Socket
 {
     public interface ITCPServer
     {
-        IEnumerable<SessionInfo> GetAllSession();
-        SessionInfo GetSessionByID(string sessionID);
+        IEnumerable<ISessionWrapper> GetAllSession();
+        ISessionWrapper GetSessionByID(string sessionID);
         bool Start(IServerConfig serverConfig);
         void Stop();
         event EventHandler<SessionInfo> NewSessionConnected;

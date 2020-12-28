@@ -1,4 +1,7 @@
-﻿namespace Mature.Socket.Server.SuperSocket
+﻿using System;
+using System.Net;
+
+namespace Mature.Socket.Server.SuperSocket
 {
     public class SessionWrapper : ISessionWrapper
     {
@@ -9,6 +12,8 @@
         }
 
         public string SessionId => session.SessionID;
+        public EndPoint RemoteEndPoint { get => session.RemoteEndPoint; }
+        public EndPoint LocalEndPoint { get => session.LocalEndPoint; }
 
         public void Send(byte[] data, int offset, int length)
         {
